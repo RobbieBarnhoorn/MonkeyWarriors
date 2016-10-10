@@ -53,9 +53,7 @@ public class PlayScreen implements Screen {
 
     // Sprites
     private Monkey player;
-    //
-    private final static float cameraSpeed = 0.015f;
-    private final static float ispeed = 1.0f - cameraSpeed;
+
     public PlayScreen(MonkeyWarriors game) {
         this.game = game;
 
@@ -144,11 +142,11 @@ public class PlayScreen implements Screen {
         hud.update(dt);
 
         // Make our camera track our players position smoothly
-
+        final float speed = 0.02f, ispeed=1.0f-speed;
         Vector3 cameraPosition = new Vector3(gamecam.position);
         cameraPosition.scl(ispeed);
-        Vector3 target = new Vector3(player.b2body.getPosition().x, player.b2body.getPosition().y - 30/PPM, 0);
-        target.scl(cameraSpeed);
+        Vector3 target = new Vector3(player.b2body.getPosition().x, player.b2body.getPosition().y, 0);
+        target.scl(speed);
         cameraPosition.add(target);
 
         // Don't allow the camera to show any of the black portion beyond the edge of the map
@@ -186,11 +184,7 @@ public class PlayScreen implements Screen {
         renderer.render();
 
         // Render our Box2DDebugLines
-<<<<<<< HEAD
         b2dr.render(world, gamecam.combined);
-=======
-        b2dr.render(world, gamecam.combined);
->>>>>>> roof-bugs
 
         game.batch.setProjectionMatrix(gamecam.combined);
 

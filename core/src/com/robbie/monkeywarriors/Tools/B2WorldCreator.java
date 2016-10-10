@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.robbie.monkeywarriors.Screens.PlayScreen;
+import com.robbie.monkeywarriors.Sprites.Enemies.Egg;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
 import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
@@ -20,6 +21,7 @@ public class B2WorldCreator {
 
     private Monkey player;
     private Array<Soldier> soldiers;
+    private Array<Egg> eggs;
 
     private PlayScreen screen;
     private World world;
@@ -44,9 +46,10 @@ public class B2WorldCreator {
 
         createGround();
         createLava();
-        createEnemies();
+        createSoldiers();
         createMarkers();
         createMonkey();
+        createEggs();
     }
 
     private void createGround() {
@@ -82,10 +85,6 @@ public class B2WorldCreator {
             fdef.filter.maskBits= MONKEY_BIT;
             body.createFixture(fdef);
         }
-    }
-
-    private void createEnemies() {
-        createSoldiers();
     }
 
     private void createSoldiers() {
@@ -129,7 +128,18 @@ public class B2WorldCreator {
     private void createMonkey() {
         MapObject object = map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject)object).getRectangle();
-        player = new Monkey(screen, rect.getX()/PPM, rect.getY()/PPM);
+        player = new Monkey(screen, (rect.getX() + rect.getWidth()/2)/PPM,
+                (rect.getY() + rect.getHeight()/2)/PPM);
+    }
+
+    private void createEggs() {
+        eggs = new Array<Egg>();
+        for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject)object).getRectangle();
+            Egg egg = new Egg(screen, (rect.getX() + rect.getWidth()/2)/PPM,
+                    (rect.getY() + rect.getHeight()/2)/PPM);
+            eggs.add(egg);
+        }
     }
 
     public Monkey getPlayer() {
@@ -139,6 +149,7 @@ public class B2WorldCreator {
     public Array<Enemy> getEnemies(){
         Array<Enemy> enemies = new Array<Enemy>();
         enemies.addAll(soldiers);
+        enemies.addAll(eggs);
         return enemies;
     }
 }

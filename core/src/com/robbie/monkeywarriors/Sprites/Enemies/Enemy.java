@@ -12,16 +12,10 @@ import com.robbie.monkeywarriors.Screens.PlayScreen;
  */
 public abstract class Enemy extends Sprite {
 
-    public enum State {PATROLLING, STATIONARY, ALERT, SEARCHING, SHOOTING, DEAD};
-    public State currentState;
-    public State previousState;
-
     protected World world;
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
-
-    protected boolean facingRight;
     protected boolean dead;
 
 
@@ -53,18 +47,4 @@ public abstract class Enemy extends Sprite {
         return dead;
     }
 
-    public void setPatrolling(boolean patrolling) {
-        if (patrolling)
-            this.currentState = State.PATROLLING;
-        else
-            this.currentState = State.STATIONARY;
-    }
-
-    public void setFacingRight(boolean facingRight) {
-        this.facingRight = facingRight;
-    }
-
-    public boolean facingRight() {
-        return facingRight;
-    }
 }
