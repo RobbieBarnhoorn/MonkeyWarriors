@@ -15,9 +15,14 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
  */
 public class Soldier extends Enemy {
 
+    public enum State {PATROLLING, STATIONARY, ALERT, SEARCHING, SHOOTING, DEAD};
+    public State currentState;
+    public State previousState;
+
     private float stateTimer;
     private Animation walkAnimation;
     private TextureRegion standFrame;
+    protected boolean facingRight;
 
     public Soldier(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -89,6 +94,7 @@ public class Soldier extends Enemy {
     }
 
 
+    // Return the current state of the soldier
     public State getState(){
         //Test to Box2D for velocity on the X and Y-Axis
         //if monkey is going positive in Y-Axis he is jumping... or if he just jumped and is falling remain in jump state
@@ -121,8 +127,15 @@ public class Soldier extends Enemy {
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public float getStateTimer() {
-        return stateTimer;
+    public void setPatrolling(boolean patrolling) {
+        if (patrolling)
+            this.currentState = State.PATROLLING;
+        else
+            this.currentState = State.STATIONARY;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
     }
 
 }

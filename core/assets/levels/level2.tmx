@@ -231,7 +231,7 @@
  <objectgroup name="start">
   <object id="262" x="0" y="368" width="16" height="16"/>
  </objectgroup>
- <objectgroup name="roofbug">
+ <objectgroup name="egg">
   <object id="336" x="1088" y="16" width="16" height="16"/>
   <object id="337" x="1152" y="16" width="16" height="16"/>
   <object id="338" x="1168" y="16" width="16" height="16"/>
