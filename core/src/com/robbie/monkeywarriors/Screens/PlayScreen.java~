@@ -187,7 +187,7 @@ public class PlayScreen implements Screen {
 
         // Render our Box2DDebugLines
 <<<<<<< HEAD
-        //b2dr.render(world, gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 =======
         b2dr.render(world, gamecam.combined);
 >>>>>>> roof-bugs
