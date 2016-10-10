@@ -34,6 +34,8 @@ public class Monkey extends Sprite {
 
     private PlayScreen screen;
     private float stateTimer;
+    private final static float moveSpeed = 1.1f;
+    private final static float jumpSpeed = 2.4f;
     private boolean runningRight;
     private boolean dead;
     public boolean canDoubleJump;
@@ -70,7 +72,7 @@ public class Monkey extends Sprite {
         defineMonkey();
 
         // Set initial values for the textures location, width and height
-        setBounds(0, 0, 32/PPM, 32/PPM);
+        setBounds(0, 0, 24/PPM, 24/PPM);
         setRegion(standFrame);
     }
 
@@ -80,7 +82,8 @@ public class Monkey extends Sprite {
 
         handleMovement(dt);
 
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 3/PPM);
+        setPosition(b2body.getPosition().x - getWidth() / 2,
+                b2body.getPosition().y - getHeight() / 2 + 2f/PPM);
         setRegion(getFrame(dt));
     }
 
@@ -89,10 +92,10 @@ public class Monkey extends Sprite {
         float desiredVel = 0;
         for (int i = 0; i < movement.size; i++) {
             if (movement.get(i) == Movement.LEFT) {
-                desiredVel -= 1.3f;
+                desiredVel -= moveSpeed;
             }
             if (movement.get(i) == Movement.RIGHT) {
-                desiredVel += 1.3f;
+                desiredVel += moveSpeed;
             }
             if (movement.get(i) == Movement.UP) {
                 jump(dt);
@@ -108,8 +111,7 @@ public class Monkey extends Sprite {
         float desiredVel = 0;
         // If he is jumping from on the ground
         if (currentFrameState == State.STANDING || currentFrameState == State.RUNNING) {
-            //b2body.applyForceToCenter(new Vector2(0, 3.5f), true);
-            desiredVel += 2.75f;
+            desiredVel += jumpSpeed;
             previousFrameState = currentFrameState;
             currentFrameState = State.JUMPING;
             float velChange = desiredVel - vel.y;
@@ -204,7 +206,7 @@ public class Monkey extends Sprite {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(8 / PPM);
+        shape.setRadius(6 / PPM);
         fdef.filter.categoryBits = MONKEY_BIT;
         fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | ENEMY_BIT;
         fdef.shape = shape;

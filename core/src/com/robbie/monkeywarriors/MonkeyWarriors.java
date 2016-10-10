@@ -8,8 +8,8 @@ public class MonkeyWarriors extends Game {
 
 	public SpriteBatch batch;
 
-	public static final int V_WIDTH = 700;
-	public static final int V_HEIGHT = 400;
+	public static final int V_WIDTH = 16*32;
+	public static final int V_HEIGHT = 9*32;
 	public static final float PPM = 100;
 
     //Box2D Collision Bits
