@@ -35,7 +35,6 @@ public class PlayScreen implements Screen {
 
 
     //Tiled map variables
-    private TmxMapLoader maploader;
     private TiledMap map;
     private MapProperties mapProperties;
     private int mapWidth;
@@ -70,7 +69,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch);
 
         // Load our map and setup our map renderer
-        maploader = new TmxMapLoader();
+        TmxMapLoader maploader = new TmxMapLoader();
         map = maploader.load("levels/level2.tmx");
         mapProperties = map.getProperties();
         mapWidth = mapProperties.get("width", Integer.class);
@@ -185,8 +184,6 @@ public class PlayScreen implements Screen {
         // Render our map
         renderer.render();
 
-        // Render our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(gamecam.combined);
 
@@ -200,6 +197,9 @@ public class PlayScreen implements Screen {
             enemy.draw(game.batch);
 
         game.batch.end();
+
+        // Render our Box2DDebugLines
+        b2dr.render(world, gamecam.combined);
 
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

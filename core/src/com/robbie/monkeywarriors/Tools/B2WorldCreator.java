@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.robbie.monkeywarriors.Screens.PlayScreen;
-import com.robbie.monkeywarriors.Sprites.Enemies.Egg;
+import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
 import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
@@ -21,7 +21,7 @@ public class B2WorldCreator {
 
     private Monkey player;
     private Array<Soldier> soldiers;
-    private Array<Egg> eggs;
+    private Array<Bat> eggs;
 
     private PlayScreen screen;
     private World world;
@@ -55,6 +55,7 @@ public class B2WorldCreator {
     private void createGround() {
 
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+            boolean background = object.getProperties().get();
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -133,12 +134,12 @@ public class B2WorldCreator {
     }
 
     private void createEggs() {
-        eggs = new Array<Egg>();
+        eggs = new Array<Bat>();
         for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            Egg egg = new Egg(screen, (rect.getX() + rect.getWidth()/2)/PPM,
+            Bat bat = new Bat(screen, (rect.getX() + rect.getWidth()/2)/PPM,
                     (rect.getY() + rect.getHeight()/2)/PPM);
-            eggs.add(egg);
+            eggs.add(bat);
         }
     }
 

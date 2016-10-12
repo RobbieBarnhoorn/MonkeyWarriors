@@ -13,51 +13,44 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 /**
  * Created by robbie on 2016/10/10.
  */
-public class Egg extends Enemy{
+public class Bat extends Enemy{
 
-    public enum State {READY, BIRTHING, GESTATING};
+    public enum State {SLEEPING, ATTACKING};
     public State currentState;
     public State previousState;
 
     private float stateTimer;
-    private Animation birthAnimation;
-    private TextureRegion readyFrame;
-    private TextureRegion gestatingFrame;
+    private Animation attackAnimation;
+    private TextureRegion sleepFrame;
 
     private boolean enemyInRange;
 
-    public Egg(PlayScreen screen, float x, float y) {
+    public Bat(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
-        currentState = State.READY;
-        previousState = State.READY;
+        currentState = State.SLEEPING;
+        previousState = State.SLEEPING;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
 
         // Create a birthing animation
         for (int i = 0; i < 4; i++) {
-            frames.add(new TextureRegion(new Texture("sprites/egg/egg.png"), i*32, 0, 32, 32));
-            frames.get(i).flip(false, true);
+            frames.add(new TextureRegion(new Texture("sprites/bat/bat.png"), i*24, 0, 24, 24));
         }
-        birthAnimation = new Animation(1/10f, frames);
+        attackAnimation = new Animation(1/10f, frames);
 
         frames.clear();
 
         // Create a ready frame
-        readyFrame = new TextureRegion(new Texture("sprites/egg/egg.png"), 0, 0, 32, 32);
-        readyFrame.flip(false, true);
-
-        // Create a ready frame
-        gestatingFrame = new TextureRegion(new Texture("sprites/egg/egg.png"), 96, 0, 32, 32);
-        gestatingFrame.flip(false, true);
+        sleepFrame = new TextureRegion(new Texture("sprites/bat/bat.png"), 72, 0, 24, 24);
 
         // Set initial values for the textures location, width and height
         setBounds(0, 0, 16/PPM, 16/PPM);
-        setRegion(readyFrame);
+        setRegion(sleepFrame);
     }
 
     public void update(float dt) {
-        setPosition(b2body.getPosition().x - getWidth()/2, b2body.getPosition().y - getHeight()/2 + 2/PPM);
+        setPosition(b2body.getPosition().x - getWidth()/2 + 1/PPM, b2body.getPosition().y - getHeight()/2 + 1/PPM);
         setRegion(getFrame(dt));
         b2body.setLinearVelocity(velocity);
     }
@@ -76,15 +69,12 @@ public class Egg extends Enemy{
 
         // Get keyFrame corresponding to currentState
         switch(currentState) {
-            case READY:
-                region = readyFrame;
-                break;
-            case BIRTHING:
-                region = birthAnimation.getKeyFrame(stateTimer);
-                break;
-            case GESTATING:
+            case SLEEPING:
             default:
-                region = gestatingFrame;
+                region = sleepFrame;
+                break;
+            case ATTACKING:
+                region = attackAnimation.getKeyFrame(stateTimer);
                 break;
         }
 
@@ -104,17 +94,11 @@ public class Egg extends Enemy{
      * @return
      */
     public State getState(){
-        if (enemyInRange && currentState == State.READY) {
-            return State.BIRTHING;
-        }
-        else if (currentState == State.BIRTHING && stateTimer <= 0.4f) {
-            return State.BIRTHING;
-        }
-        else if (currentState == State.BIRTHING && stateTimer > 0.4f) {
-            return State.GESTATING;
+        if (enemyInRange) {
+            return State.ATTACKING;
         }
         else {
-            return State.READY;
+            return State.SLEEPING;
         }
     }
 
@@ -129,7 +113,7 @@ public class Egg extends Enemy{
 
             FixtureDef fdef = new FixtureDef();
             CircleShape shape = new CircleShape();
-            shape.setRadius(4 / PPM);
+            shape.setRadius(3.5f / PPM);
             fdef.filter.categoryBits = ENEMY_BIT;
             fdef.filter.maskBits = MONKEY_BIT;
             fdef.shape = shape;
