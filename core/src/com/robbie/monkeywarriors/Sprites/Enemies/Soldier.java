@@ -20,6 +20,7 @@ public class Soldier extends Enemy {
     public State previousState;
 
     private float stateTimer;
+    private Texture tex;
     private Animation walkAnimation;
     private TextureRegion standFrame;
     protected boolean facingRight;
@@ -30,18 +31,20 @@ public class Soldier extends Enemy {
         currentState = State.STATIONARY;
         previousState = State.STATIONARY;
 
+        tex = new Texture("sprites/soldier/soldier_walk.png");
+
         Array<TextureRegion> frames = new Array<TextureRegion>();
 
         // Create a walking animation
         for (int i = 0; i < 4; i++) {
-            frames.add(new TextureRegion(new Texture("sprites/soldier/soldier_walk.png"), i*100, 0, 100, 100));
+            frames.add(new TextureRegion(tex, i*100, 0, 100, 100));
         }
         walkAnimation = new Animation(1/5f, frames);
 
         frames.clear();
 
         // Create a standing frame
-        standFrame = new TextureRegion(new Texture("sprites/soldier/soldier_walk.png"), 0, 0, 100, 100);
+        standFrame = new TextureRegion(tex, 0, 0, 100, 100);
 
         // Set initial values for the textures location, width and height
         setBounds(0, 0, 36/PPM, 36/PPM);
@@ -96,13 +99,7 @@ public class Soldier extends Enemy {
 
     // Return the current state of the soldier
     public State getState(){
-        //Test to Box2D for velocity on the X and Y-Axis
-        //if monkey is going positive in Y-Axis he is jumping... or if he just jumped and is falling remain in jump state
-        if(dead) {
-            return State.DEAD;
-        }
-        //if monkey is positive or negative in the X axis he is running
-        else if(b2body.getLinearVelocity().x != 0) {
+        if(b2body.getLinearVelocity().x != 0) {
             return State.PATROLLING;
         }
         //if none of these return then he must be standing
@@ -121,7 +118,7 @@ public class Soldier extends Enemy {
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(10 / PPM);
-        fdef.filter.categoryBits = ENEMY_BIT;
+        fdef.filter.categoryBits = SOLDIER_BIT;
         fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | MONKEY_BIT | MARKER_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
@@ -136,6 +133,10 @@ public class Soldier extends Enemy {
 
     public void setFacingRight(boolean facingRight) {
         this.facingRight = facingRight;
+    }
+
+    public void dispose() {
+        tex.dispose();
     }
 
 }

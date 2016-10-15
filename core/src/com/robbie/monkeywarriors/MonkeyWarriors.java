@@ -17,8 +17,9 @@ public class MonkeyWarriors extends Game {
     public static final short GROUND_BIT = 1;
     public static final short MONKEY_BIT = 2;
     public static final short LAVA_BIT = 4;
-	public static final short ENEMY_BIT = 8;
+	public static final short SOLDIER_BIT = 8;
     public static final short MARKER_BIT = 16;
+	public static final short BAT_BIT = 32;
 
 
 
