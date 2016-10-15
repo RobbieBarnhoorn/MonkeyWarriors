@@ -1,6 +1,7 @@
 package com.robbie.monkeywarriors.Tools;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 
@@ -31,8 +32,8 @@ public class WorldContactListener implements ContactListener {
                     ((Monkey)fixB.getUserData()).kill();
                 }
                 break;
-            case MARKER_BIT | ENEMY_BIT:
-                if (fixA.getFilterData().categoryBits == ENEMY_BIT) {
+            case MARKER_BIT | SOLDIER_BIT:
+                if (fixA.getFilterData().categoryBits == SOLDIER_BIT) {
                     Enemy enemy = (Enemy) fixA.getUserData();
                     enemy.reverseVelocity(true, false);
                 }
@@ -56,7 +57,7 @@ public class WorldContactListener implements ContactListener {
                     }
                 }
                 break;
-            case MONKEY_BIT | ENEMY_BIT:
+            case MONKEY_BIT | SOLDIER_BIT:
                 if (fixA.getFilterData().categoryBits == MONKEY_BIT) {
                     Monkey player = (Monkey) fixA.getUserData();
                     Enemy enemy = (Enemy) fixB.getUserData();
@@ -70,6 +71,25 @@ public class WorldContactListener implements ContactListener {
                     player.kill();
                 }
                 break;
+            case MONKEY_BIT | BAT_BIT:
+                if (fixA.getFilterData().categoryBits == MONKEY_BIT) {
+                    Monkey player = (Monkey) fixA.getUserData();
+                    player.kill();
+                }
+                else {
+                    Monkey player = (Monkey) fixB.getUserData();
+                    player.kill();
+                }
+                break;
+            case BAT_BIT | GROUND_BIT:
+                if (fixA.getFilterData().categoryBits == BAT_BIT) {
+                    Bat bat = (Bat) fixA.getUserData();
+                    bat.setToDestroy();
+                }
+                else {
+                    Bat bat = (Bat) fixB.getUserData();
+                    bat.setToDestroy();
+                }
         }
     }
 

@@ -1,9 +1,11 @@
 package com.robbie.monkeywarriors.Tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.robbie.monkeywarriors.Screens.PlayScreen;
@@ -21,7 +23,7 @@ public class B2WorldCreator {
 
     private Monkey player;
     private Array<Soldier> soldiers;
-    private Array<Bat> eggs;
+    private Array<Bat> bats;
 
     private PlayScreen screen;
     private World world;
@@ -49,13 +51,12 @@ public class B2WorldCreator {
         createSoldiers();
         createMarkers();
         createMonkey();
-        createEggs();
+        createBats();
     }
 
     private void createGround() {
 
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
-            boolean background = object.getProperties().get();
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -121,7 +122,8 @@ public class B2WorldCreator {
             shape.setAsBox(rect.getWidth()/2/PPM, rect.getHeight()/2/PPM);
             fdef.shape = shape;
             fdef.filter.categoryBits = MARKER_BIT;
-            fdef.filter.maskBits = ENEMY_BIT;
+            fdef.filter.maskBits = SOLDIER_BIT;
+            fdef.isSensor = true;
             body.createFixture(fdef);
         }
     }
@@ -133,13 +135,13 @@ public class B2WorldCreator {
                 (rect.getY() + rect.getHeight()/2)/PPM);
     }
 
-    private void createEggs() {
-        eggs = new Array<Bat>();
+    private void createBats() {
+        bats = new Array<Bat>();
         for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
             Bat bat = new Bat(screen, (rect.getX() + rect.getWidth()/2)/PPM,
                     (rect.getY() + rect.getHeight()/2)/PPM);
-            eggs.add(bat);
+            bats.add(bat);
         }
     }
 
@@ -150,7 +152,19 @@ public class B2WorldCreator {
     public Array<Enemy> getEnemies(){
         Array<Enemy> enemies = new Array<Enemy>();
         enemies.addAll(soldiers);
-        enemies.addAll(eggs);
+        enemies.addAll(bats);
         return enemies;
+    }
+
+    /**
+     * Returns the euclidean distance between two position vectors
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static float dist(Vector2 p1, Vector2 p2) {
+        float dxsqr = (float)Math.pow((p1.x - p2.x), 2);
+        float dysqr = (float)Math.pow((p1.y - p2.y), 2);
+        return (float)Math.sqrt(dxsqr + dysqr);
     }
 }

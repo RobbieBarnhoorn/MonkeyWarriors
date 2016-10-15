@@ -16,7 +16,6 @@ public abstract class Enemy extends Sprite {
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
-    protected boolean dead;
 
 
     public Enemy(PlayScreen screen, float x, float y) {
@@ -27,10 +26,9 @@ public abstract class Enemy extends Sprite {
         velocity = new Vector2(0, 0);
     }
 
-
-    public abstract void defineEnemy();
-
     public abstract void update(float dt);
+    public abstract void defineEnemy();
+    public abstract void dispose();
 
     public void reverseVelocity(boolean x, boolean y) {
         if (x)
@@ -42,9 +40,4 @@ public abstract class Enemy extends Sprite {
     public void draw(Batch batch) {
         super.draw(batch);
     }
-
-    public boolean isDead() {
-        return dead;
-    }
-
 }
