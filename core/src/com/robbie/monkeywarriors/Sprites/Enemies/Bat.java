@@ -19,9 +19,9 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 public class Bat extends Enemy{
 
     // What the bat is currently doing
-    public enum State {SLEEPING, ATTACKING, DEAD};
-    public State currentState;
-    public State previousState;
+    private enum State {SLEEPING, ATTACKING, DEAD};
+    private State currentState;
+    private State previousState;
 
     // Animations and animation timer
     private Texture tex;
@@ -29,6 +29,7 @@ public class Bat extends Enemy{
     private Animation attackAnimation;
     private Animation deathAnimation;
     private TextureRegion sleepFrame;
+    private boolean facingRight;
 
     // Variables relating to the bats vision
     private Fixture fix;
@@ -39,6 +40,7 @@ public class Bat extends Enemy{
     private static float VISION_RANGE = 80/PPM;
     private boolean playerSeen;
 
+    // Variables relating to the bats death
     private boolean setToDestroy;
     private boolean destroyed;
 
@@ -64,12 +66,13 @@ public class Bat extends Enemy{
 
         // SpriteSheet with bat sprites
         tex = new Texture("sprites/bat/bat.png");
+        stateTimer = 0;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 0; i < 3; i++) {
             frames.add(new TextureRegion(tex, i*24, 0, 24, 24));
         }
-        attackAnimation = new Animation(1/10f, frames);
+        attackAnimation = new Animation(1/8f, frames);
         frames.clear();
 
         for (int i = 4; i < 9; i++) {
@@ -79,6 +82,8 @@ public class Bat extends Enemy{
         frames.clear();
 
         sleepFrame = new TextureRegion(tex, 72, 0, 24, 24);
+
+        facingRight = false;
 
 
         // Set initial values for the textures location, width and height
@@ -123,7 +128,14 @@ public class Bat extends Enemy{
             // Set which TextureRegion we are using
             setRegion(getFrame());
 
-            //Raycast to determine if the bat can see the player
+            if (currentState != previousState) {
+                stateTimer = 0;
+            }
+
+            // Update previous state
+            previousState = currentState;
+
+            // Raycast to determine if the bat can see the player
             fix = null;
             world.rayCast(callback, p1, p2);
         }
@@ -137,7 +149,6 @@ public class Bat extends Enemy{
 
         // Get monkeys current state
         currentState = getState();
-
         TextureRegion region = null;
 
         // Get keyFrame corresponding to currentState
@@ -146,19 +157,22 @@ public class Bat extends Enemy{
                 region = deathAnimation.getKeyFrame(stateTimer);
                 break;
             case ATTACKING:
-                region = attackAnimation.getKeyFrame(stateTimer);
+                region = attackAnimation.getKeyFrame(stateTimer, true);
                 break;
             case SLEEPING:
                 region = sleepFrame;
                 break;
         }
-
-        if (currentState != previousState) {
-            stateTimer = 0;
+        // If soldier is walking left and the texture isn't facing left, flip it
+        if ((b2body.getLinearVelocity().x < 0 || !facingRight) && region.isFlipX()) {
+            region.flip(true, false);
+            facingRight = false;
         }
-
-        //update previous state
-        previousState = currentState;
+        // Else if soldier is running right and the texture isn't facing right, flip it
+        else if ((b2body.getLinearVelocity().x > 0 || facingRight) && !region.isFlipX()) {
+            region.flip(true, false);
+            facingRight = true;
+        }
 
         //return our final adjusted frame
         return region;
@@ -211,9 +225,10 @@ public class Bat extends Enemy{
     }
 
     private void attack(float dt) {
-        // So that the line can be drawn to the screen
+        // So that the vision line can be drawn to the screen
         screen.addRay(p1, collision);
 
+        // Apply a downwards force initially, like the bat is pushing off the roof
         if (previousState != State.ATTACKING) {
             b2body.applyLinearImpulse(new Vector2(0, -0.4f), b2body.getWorldCenter(), true);
         }

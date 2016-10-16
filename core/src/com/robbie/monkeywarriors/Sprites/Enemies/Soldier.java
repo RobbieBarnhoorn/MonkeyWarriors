@@ -15,15 +15,17 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
  */
 public class Soldier extends Enemy {
 
-    public enum State {PATROLLING, STATIONARY, ALERT, SEARCHING, SHOOTING, DEAD};
-    public State currentState;
-    public State previousState;
+    // What the soldier is currently doing
+    private enum State {PATROLLING, STATIONARY, ALERT, SEARCHING, SHOOTING, DEAD};
+    private State currentState;
+    private State previousState;
 
+    // Animations and animation timer
     private float stateTimer;
     private Texture tex;
     private Animation walkAnimation;
     private TextureRegion standFrame;
-    protected boolean facingRight;
+    private boolean facingRight;
 
     public Soldier(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -75,13 +77,12 @@ public class Soldier extends Enemy {
                 region = standFrame;
                 break;
         }
-
-        // If monkey is running left and the texture isn't facing left, flip it
+        // If soldier is walking left and the texture isn't facing left, flip it
         if ((b2body.getLinearVelocity().x < 0 || !facingRight) && !region.isFlipX()) {
             region.flip(true, false);
             facingRight = false;
         }
-        // Else if monkey is running right and the texture isn't facing right, flip it
+        // Else if soldier is running right and the texture isn't facing right, flip it
         else if ((b2body.getLinearVelocity().x > 0 || facingRight) && region.isFlipX()) {
             region.flip(true, false);
             facingRight = true;
