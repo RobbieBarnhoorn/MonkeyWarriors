@@ -84,7 +84,7 @@ public class B2WorldCreator {
             shape.setAsBox(rect.getWidth()/2/PPM, rect.getHeight()/2/PPM);
             fdef.shape = shape;
             fdef.filter.categoryBits = LAVA_BIT;
-            fdef.filter.maskBits= MONKEY_BIT;
+            fdef.filter.maskBits= MONKEY_BIT | BAT_BIT | SOLDIER_BIT | BULLET_BIT;
             body.createFixture(fdef);
         }
     }
@@ -93,24 +93,14 @@ public class B2WorldCreator {
         soldiers = new Array<Soldier>();
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
-            Soldier soldier = new Soldier(screen, rect.getX()/PPM, rect.getY()/PPM);
             boolean patrolling = object.getProperties().get("Patrol").equals(true);
             boolean facingRight = object.getProperties().get("Direction").equals("Right");
-            soldier.setPatrolling(patrolling);
-            if (patrolling) {
-                if (facingRight)
-                    soldier.velocity.x = 0.3f;
-                else {
-                    soldier.velocity.x = -0.3f;
-                }
-            }
-            soldier.setFacingRight(object.getProperties().get("Direction").equals("Right"));
+            Soldier soldier = new Soldier(screen, rect.getX()/PPM, rect.getY()/PPM, facingRight, patrolling);
             soldiers.add(soldier);
         }
     }
 
     private void createMarkers() {
-
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
 
@@ -158,13 +148,8 @@ public class B2WorldCreator {
 
     /**
      * Returns the euclidean distance between two position vectors
-     * @param s1
-     * @param s2
+     * @param p1
+     * @param p2
      * @return
      */
-    public static float dist(Vector2 p1, Vector2 p2) {
-        float dxsqr = (float)Math.pow((p1.x - p2.x), 2);
-        float dysqr = (float)Math.pow((p1.y - p2.y), 2);
-        return (float)Math.sqrt(dxsqr + dysqr);
-    }
 }

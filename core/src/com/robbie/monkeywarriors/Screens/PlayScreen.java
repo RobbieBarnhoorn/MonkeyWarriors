@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.robbie.monkeywarriors.MonkeyWarriors;
 import com.robbie.monkeywarriors.Scenes.Hud;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
+import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 import com.robbie.monkeywarriors.Tools.B2WorldCreator;
 import com.robbie.monkeywarriors.Tools.WorldContactListener;
@@ -126,7 +128,7 @@ public class PlayScreen implements Screen {
         player.movement.clear();
 
         //control our player using immediate impulses
-        if(player.currentFrameState != Monkey.State.DEAD) {
+        if(player.currentState != Monkey.State.DEAD) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
                 player.movement.add(Monkey.Movement.UP);
             }
@@ -203,7 +205,6 @@ public class PlayScreen implements Screen {
         // Render our map
         renderer.render();
 
-
         game.batch.setProjectionMatrix(gamecam.combined);
 
         game.batch.begin();
@@ -277,10 +278,6 @@ public class PlayScreen implements Screen {
 
     public Monkey getPlayer() {
         return player;
-    }
-
-    public Array<Enemy> getEnemies() {
-        return creator.getEnemies();
     }
 
     public void addRay(Vector2 start, Vector2 end) {

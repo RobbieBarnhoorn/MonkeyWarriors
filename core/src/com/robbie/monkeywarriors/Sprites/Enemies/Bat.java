@@ -55,6 +55,7 @@ public class Bat extends Enemy{
             collision = point.cpy();
             norm.set(normal).add(point);
             fix = fixture;
+            // Return fraction, so that the ray ends here
             return fraction;
         }
     };
@@ -72,13 +73,13 @@ public class Bat extends Enemy{
         for (int i = 0; i < 3; i++) {
             frames.add(new TextureRegion(tex, i*24, 0, 24, 24));
         }
-        attackAnimation = new Animation(1/8f, frames);
+        attackAnimation = new Animation(1/12f, frames);
         frames.clear();
 
         for (int i = 4; i < 9; i++) {
            frames.add(new TextureRegion(tex, i*24, 0, 24, 24));
         }
-        deathAnimation = new Animation(1/10f, frames);
+        deathAnimation = new Animation(1/12f, frames);
         frames.clear();
 
         sleepFrame = new TextureRegion(tex, 72, 0, 24, 24);
@@ -147,7 +148,6 @@ public class Bat extends Enemy{
      */
     public TextureRegion getFrame() {
 
-        // Get monkeys current state
         currentState = getState();
         TextureRegion region = null;
 
@@ -214,14 +214,14 @@ public class Bat extends Enemy{
             CircleShape shape = new CircleShape();
             shape.setRadius(3.5f / PPM);
             fdef.filter.categoryBits = BAT_BIT;
-            fdef.filter.maskBits = MONKEY_BIT | GROUND_BIT | LAVA_BIT;
+            fdef.filter.maskBits = MONKEY_BIT | GROUND_BIT | LAVA_BIT | SOLDIER_BIT |BULLET_BIT;
             fdef.shape = shape;
             b2body.createFixture(fdef).setUserData(this);
     }
 
     private boolean isPlayerVisible() {
         return fix != null && fix.getUserData() instanceof Monkey
-                && B2WorldCreator.dist(p1, p2) < VISION_RANGE;
+                && p1.dst(p2) < VISION_RANGE;
     }
 
     private void attack(float dt) {

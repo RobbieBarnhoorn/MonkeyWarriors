@@ -2,7 +2,8 @@ package com.robbie.monkeywarriors.Tools;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
-import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
+import com.robbie.monkeywarriors.Sprites.Enemies.Bullet;
+import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
@@ -34,11 +35,10 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MARKER_BIT | SOLDIER_BIT:
                 if (fixA.getFilterData().categoryBits == SOLDIER_BIT) {
-                    Enemy enemy = (Enemy) fixA.getUserData();
-                    enemy.reverseVelocity(true, false);
+                    ((Soldier) fixA.getUserData()).setWaiting();
                 }
                 else {
-                    ((Enemy)fixB.getUserData()).reverseVelocity(true, false);
+                    ((Soldier)fixB.getUserData()).setWaiting();
                 }
                 break;
             case MONKEY_BIT | GROUND_BIT:
@@ -60,14 +60,10 @@ public class WorldContactListener implements ContactListener {
             case MONKEY_BIT | SOLDIER_BIT:
                 if (fixA.getFilterData().categoryBits == MONKEY_BIT) {
                     Monkey player = (Monkey) fixA.getUserData();
-                    Enemy enemy = (Enemy) fixB.getUserData();
-
                     player.kill();
                 }
                 else {
                     Monkey player = (Monkey) fixB.getUserData();
-                    Enemy enemy = (Enemy) fixA.getUserData();
-
                     player.kill();
                 }
                 break;
@@ -90,6 +86,70 @@ public class WorldContactListener implements ContactListener {
                     Bat bat = (Bat) fixB.getUserData();
                     bat.setToDestroy();
                 }
+                break;
+            case BULLET_BIT | MONKEY_BIT:
+                if (fixA.getFilterData().categoryBits == MONKEY_BIT) {
+                    Monkey monkey = (Monkey) fixA.getUserData();
+                    monkey.kill();
+                }
+                else {
+                    Monkey monkey = (Monkey) fixB.getUserData();
+                    monkey.kill();
+                }
+                break;
+            case BULLET_BIT | GROUND_BIT:
+            case BULLET_BIT | LAVA_BIT:
+                if (fixA.getFilterData().categoryBits == BULLET_BIT) {
+                    Bullet bullet = (Bullet) fixA.getUserData();
+                    bullet.setToDestroy();
+                }
+                else {
+                    Bullet bullet = (Bullet) fixB.getUserData();
+                    bullet.setToDestroy();
+                }
+                break;
+            case BULLET_BIT | SOLDIER_BIT:
+                if (fixA.getFilterData().categoryBits == BULLET_BIT) {
+                    Bullet bullet = (Bullet) fixA.getUserData();
+                    bullet.setToDestroy();
+                    Soldier soldier = (Soldier)fixB.getUserData();
+                    soldier.setToDestroy();
+                }
+                else {
+                    Bullet bullet = (Bullet) fixB.getUserData();
+                    bullet.setToDestroy();
+                    Soldier soldier = (Soldier)fixA.getUserData();
+                    soldier.setToDestroy();
+                }
+                break;
+            case BULLET_BIT | BAT_BIT:
+                if (fixA.getFilterData().categoryBits == BULLET_BIT) {
+                    Bullet bullet = (Bullet) fixA.getUserData();
+                    bullet.setToDestroy();
+                    Bat bat = (Bat)fixB.getUserData();
+                    bat.setToDestroy();
+                }
+                else {
+                    Bullet bullet = (Bullet) fixB.getUserData();
+                    bullet.setToDestroy();
+                    Bat bat = (Bat)fixA.getUserData();
+                    bat.setToDestroy();
+                }
+                break;
+            case BAT_BIT | SOLDIER_BIT:
+                if (fixA.getFilterData().categoryBits == BAT_BIT) {
+                    Bat bat = (Bat) fixA.getUserData();
+                    bat.setToDestroy();
+                    Soldier soldier = (Soldier)fixB.getUserData();
+                    soldier.setToDestroy();
+                }
+                else {
+                    Bat bat = (Bat) fixB.getUserData();
+                    bat.setToDestroy();
+                    Soldier soldier = (Soldier)fixA.getUserData();
+                    soldier.setToDestroy();
+                }
+                break;
         }
     }
 

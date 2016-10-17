@@ -17,7 +17,6 @@ public abstract class Enemy extends Sprite {
     public Body b2body;
     public Vector2 velocity;
 
-
     public Enemy(PlayScreen screen, float x, float y) {
         this.screen = screen;
         this.world = screen.getWorld();
@@ -28,14 +27,7 @@ public abstract class Enemy extends Sprite {
 
     public abstract void update(float dt);
     public abstract void defineEnemy();
-    public abstract void dispose();
-
-    public void reverseVelocity(boolean x, boolean y) {
-        if (x)
-            velocity.x = -velocity.x;
-        if (y)
-            velocity.y = -velocity.y;
-    }
+    public abstract void setToDestroy();
 
     public void draw(Batch batch) {
         super.draw(batch);

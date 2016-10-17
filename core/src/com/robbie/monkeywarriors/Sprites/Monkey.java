@@ -17,19 +17,16 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 public class Monkey extends Sprite {
 
     public enum State {FALLING, JUMPING, DOUBLE_JUMPING, STANDING, RUNNING, DEAD}
-    public State currentFrameState;
-    public State previousFrameState;
+    public State currentState;
     public State previousState;
 
-    public enum Movement {LEFT, RIGHT, UP, NONE}
+    public enum Movement {LEFT, RIGHT, UP}
     public Array<Movement> movement;
 
     public World world;
     public Body b2body;
 
     private TextureRegion standFrame;
-    private TextureRegion jumpFrame;
-    private TextureRegion doubleJumpFrame;
     private Animation runAnimation;
 
     private PlayScreen screen;
@@ -44,8 +41,7 @@ public class Monkey extends Sprite {
         this.screen = screen;
         setPosition(x, y);
         this.world = screen.getWorld();
-        currentFrameState = State.STANDING;
-        previousFrameState = State.STANDING;
+        currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
         runningRight = true;
@@ -67,8 +63,6 @@ public class Monkey extends Sprite {
         // Create standFrame frame
         standFrame = new TextureRegion(new Texture("sprites/monkey/monkey_stand.png"), 0, 0, 32, 32);
 
-        jumpFrame = new TextureRegion(new Texture("sprites/monkey/monkey_walk.png"), 0, 0, 32, 32);
-
         defineMonkey();
 
         // Set initial values for the textures location, width and height
@@ -78,7 +72,7 @@ public class Monkey extends Sprite {
 
     public void update(float dt) {
         // Get monkeys current state
-        currentFrameState = getState();
+        currentState = getState();
 
         handleMovement(dt);
 
@@ -110,20 +104,20 @@ public class Monkey extends Sprite {
         Vector2 vel = b2body.getLinearVelocity();
         float desiredVel = 0;
         // If he is jumping from on the ground
-        if (currentFrameState == State.STANDING || currentFrameState == State.RUNNING) {
+        if (currentState == State.STANDING || currentState == State.RUNNING) {
             desiredVel += jumpSpeed;
-            previousFrameState = currentFrameState;
-            currentFrameState = State.JUMPING;
+            previousState = currentState;
+            currentState = State.JUMPING;
             float velChange = desiredVel - vel.y;
             float force = b2body.getMass() * velChange / dt; // f = mv/t
             b2body.applyForceToCenter(new Vector2(0, force), true);
         }
         // If he is jumping from in the air
-        else if (currentFrameState == State.JUMPING || (currentFrameState == State.FALLING && canDoubleJump)) {
+        else if (currentState == State.JUMPING || (currentState == State.FALLING && canDoubleJump)) {
             //b2body.applyForceToCenter(new Vector2(0, 3.5f), true);
             desiredVel += 2.75;
-            previousFrameState = currentFrameState;
-            currentFrameState = State.DOUBLE_JUMPING;
+            previousState = currentState;
+            currentState = State.DOUBLE_JUMPING;
             float velChange = desiredVel - vel.y;
             float force = b2body.getMass() * velChange / dt; // f = mv/t
             b2body.applyForceToCenter(new Vector2(0, force), true);
@@ -135,8 +129,8 @@ public class Monkey extends Sprite {
 
         TextureRegion region;
 
-        // Get keyFrame corresponding to currentFrameState
-        switch(currentFrameState) {
+        // Get keyFrame corresponding to currentState
+        switch(currentState) {
             case RUNNING:
                 region = runAnimation.getKeyFrame(stateTimer, true);
                 break;
@@ -164,12 +158,9 @@ public class Monkey extends Sprite {
 
         //if the current state is the same as the previous state increase the state timer.
         //otherwise the state has changed and we need to reset timer.
-        stateTimer = currentFrameState == previousFrameState ? stateTimer + dt : 0;
+        stateTimer = currentState == previousState ? stateTimer + dt : 0;
         //update previous state
-        if (previousFrameState != currentFrameState) {
-            previousState = previousFrameState;
-        }
-        previousFrameState = currentFrameState;
+        previousState = currentState;
         //return our final adjusted frame
         return region;
     }
@@ -178,12 +169,12 @@ public class Monkey extends Sprite {
         if(dead) {
             return State.DEAD;
         }
-        else if ((b2body.getLinearVelocity().y > 0 && currentFrameState == State.DOUBLE_JUMPING)
-                || (b2body.getLinearVelocity().y < 0 && previousFrameState == State.DOUBLE_JUMPING))  {
+        else if ((b2body.getLinearVelocity().y > 0 && currentState == State.DOUBLE_JUMPING)
+                || (b2body.getLinearVelocity().y < 0 && previousState == State.DOUBLE_JUMPING))  {
                 return State.DOUBLE_JUMPING;
         }
-        else if ((b2body.getLinearVelocity().y > 0 && currentFrameState == State.JUMPING)
-                || (b2body.getLinearVelocity().y < 0 && previousFrameState == State.JUMPING))  {
+        else if ((b2body.getLinearVelocity().y > 0 && currentState == State.JUMPING)
+                || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))  {
             return State.JUMPING;
         }
         else if (b2body.getLinearVelocity().y < -0.01) {
@@ -208,14 +199,12 @@ public class Monkey extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / PPM);
         fdef.filter.categoryBits = MONKEY_BIT;
-        fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | SOLDIER_BIT | BAT_BIT;
+        fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | SOLDIER_BIT | BAT_BIT | BULLET_BIT;
         fdef.shape = shape;
         fdef.density = 1f;
         fdef.friction = 1f;
         b2body.createFixture(fdef).setUserData(this);
     }
-
-
 
     public void kill() {
         dead = true;
@@ -223,10 +212,6 @@ public class Monkey extends Sprite {
 
     public void draw(Batch batch) {
         super.draw(batch);
-    }
-
-    public float getStateTimer() {
-        return stateTimer;
     }
 
     public boolean isDead() {
