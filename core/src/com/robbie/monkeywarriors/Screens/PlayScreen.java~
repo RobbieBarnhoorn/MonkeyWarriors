@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -21,11 +22,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.robbie.monkeywarriors.MonkeyWarriors;
 import com.robbie.monkeywarriors.Scenes.Hud;
-import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
+import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 import com.robbie.monkeywarriors.Tools.B2WorldCreator;
-import com.robbie.monkeywarriors.Tools.RayCast;
 import com.robbie.monkeywarriors.Tools.WorldContactListener;
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 
@@ -63,12 +63,9 @@ public class PlayScreen implements Screen {
     private final static float cameraSpeed = 0.015f;
     private final static float ispeed = 1.0f - cameraSpeed;
 
-    // RayCasting object
-    private RayCast rayCast;
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
-
-    public Array<Vector2> beginLineToDraw;
-    public Array<Vector2> endLineToDraw;
+    public Array<Vector2> p1Array;
+    public Array<Vector2> p2Array;
 
 
     public PlayScreen(MonkeyWarriors game) {
@@ -112,9 +109,8 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        rayCast = new RayCast();
-        beginLineToDraw = new Array<Vector2>();
-        endLineToDraw = new Array<Vector2>();
+        p1Array = new Array<Vector2>();
+        p2Array = new Array<Vector2>();
 
     }
 
@@ -132,8 +128,8 @@ public class PlayScreen implements Screen {
         player.movement.clear();
 
         //control our player using immediate impulses
-        if(player.currentFrameState != Monkey.State.DEAD) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+        if(player.currentState != Monkey.State.DEAD) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 player.movement.add(Monkey.Movement.UP);
             }
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -148,8 +144,8 @@ public class PlayScreen implements Screen {
     public void update(float dt) {
 
         // Clear the lines which show us vision
-        beginLineToDraw.clear();
-        endLineToDraw.clear();
+        p1Array.clear();
+        p2Array.clear();
 
         // Handle user input
         handleInput(dt);
@@ -163,12 +159,6 @@ public class PlayScreen implements Screen {
         // Update the enemies
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-            if (enemy instanceof Bat) {
-                if (((Bat) enemy).beginLineToDraw != null) {
-                    beginLineToDraw.add(((Bat) enemy).beginLineToDraw);
-                    endLineToDraw.add(((Bat) enemy).endLineToDraw);
-                }
-            }
         }
 
         hud.update(dt);
@@ -215,7 +205,6 @@ public class PlayScreen implements Screen {
         // Render our map
         renderer.render();
 
-
         game.batch.setProjectionMatrix(gamecam.combined);
 
         game.batch.begin();
@@ -231,10 +220,11 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
 
-        /*for (int i = 0; i < beginLineToDraw.size; i++) {
-            drawDebugLine(beginLineToDraw.get(i), endLineToDraw.get(i), gamecam.combined);
+        // Render our vision lines
+        /*for (int i = 0; i < p1Array.size; i++) {
+            drawDebugLine(p1Array.get(i), p2Array.get(i), gamecam.combined);
         }*/
 
         // Set our batch to now draw what the Hud camera sees
@@ -290,8 +280,9 @@ public class PlayScreen implements Screen {
         return player;
     }
 
-    public RayCast getRayCast() {
-        return rayCast;
+    public void addRay(Vector2 start, Vector2 end) {
+        p1Array.add(start);
+        p2Array.add(end);
     }
 
     public static void drawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix)

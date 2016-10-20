@@ -129,13 +129,13 @@ public class PlayScreen implements Screen {
 
         //control our player using immediate impulses
         if(player.currentState != Monkey.State.DEAD) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 player.movement.add(Monkey.Movement.UP);
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.movement.add(Monkey.Movement.RIGHT);
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 player.movement.add(Monkey.Movement.LEFT);
             }
         }
@@ -220,12 +220,12 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
 
         // Render our vision lines
-        for (int i = 0; i < p1Array.size; i++) {
+        /*for (int i = 0; i < p1Array.size; i++) {
             drawDebugLine(p1Array.get(i), p2Array.get(i), gamecam.combined);
-        }
+        }*/
 
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

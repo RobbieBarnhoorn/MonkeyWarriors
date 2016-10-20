@@ -40,7 +40,7 @@ public class Soldier extends Enemy {
     private Vector2 p1;
     private Vector2 p2;
     private Vector2 collision;
-    private static float VISION_RANGE = 140/PPM;
+    private static float VISION_RANGE = 170/PPM;
     private boolean playerSeen;
 
     // Array of bullets this soldier has shot
