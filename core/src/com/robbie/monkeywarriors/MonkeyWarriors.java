@@ -3,7 +3,6 @@ package com.robbie.monkeywarriors;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.robbie.monkeywarriors.Screens.MainMenuScreen;
-import com.robbie.monkeywarriors.Screens.PlayScreen;
 
 public class MonkeyWarriors extends Game {
 
@@ -28,7 +27,7 @@ public class MonkeyWarriors extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-        setScreen(new PlayScreen(this));
+        setScreen(new MainMenuScreen(this));
 	}
 
 	@Override

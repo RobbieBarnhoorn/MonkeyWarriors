@@ -97,7 +97,7 @@ public class PlayScreen implements Screen {
         gamecam.position.set(gameport.getWorldWidth() / 2, gameport.getWorldHeight() / 2, 0);
 
         //create our Box2D world, setting no gravity in X, -10 gravity in Y, and allow bodies to sleep
-        world = new World(new Vector2(0, -9f), true);
+        world = new World(new Vector2(0, -8f), true);
         World.setVelocityThreshold(0);
 
         //allows for debug lines of our box2d world.

@@ -32,7 +32,7 @@ public class Monkey extends Sprite {
     private PlayScreen screen;
     private float stateTimer;
     private final static float moveSpeed = 1.1f;
-    private final static float jumpSpeed = 2.4f;
+    private final static float jumpSpeed = 2.2f;
     private boolean runningRight;
     private boolean dead;
     public boolean canDoubleJump;
