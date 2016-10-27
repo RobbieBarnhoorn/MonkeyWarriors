@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -16,32 +17,34 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 /**
  * Created by robbie on 2016/10/07.
  */
-public class Soldier extends Enemy {
+public class Bandit extends Enemy {
 
     private static final float SPEED = 0.3f;
     private static final float WAIT_TIME = 2.5f;
 
     // What the soldier is currently doing
-    private enum State {PATROLLING, STATIONARY, ATTACKING}
+    private enum State {PATROLLING, IDLING, TURNING, DRAWING, SHOOTING}
     private State currentState;
     private State previousState;
 
     // Animations and animation timer
     private float stateTimer;
-    private Texture soldier_tex;
+    private Animation idleAnimation;
     private Animation walkAnimation;
-    private TextureRegion standFrame;
+    private Animation gunAnimation;
+    private Animation shootAnimation;
     private boolean facingRight;
     private boolean patrolling;
     private boolean waiting;
 
-    // Variables relating to the soldiers vision
+    // Variables relating to the bandits vision
     private Fixture fix;
     private Vector2 p1;
     private Vector2 p2;
     private Vector2 collision;
     private static float VISION_RANGE = 170/PPM;
     private boolean playerSeen;
+    private float seenTime;
 
     // Array of bullets this soldier has shot
     private Array<Bullet> bullets;
@@ -66,32 +69,56 @@ public class Soldier extends Enemy {
         }
     };
 
-    public Soldier(PlayScreen screen, float x, float y, boolean facingRight, boolean patrolling) {
+    public Bandit(PlayScreen screen, float x, float y, boolean facingRight, boolean patrolling) {
         super(screen, x, y);
         this.facingRight = facingRight;
         this.patrolling = patrolling;
         stateTimer = 0;
-        soldier_tex = new Texture("sprites/soldier/soldier_walk.png");
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        // Create a walking animation
-        for (int i = 0; i < 4; i++) {
-            frames.add(new TextureRegion(soldier_tex, i*100, 0, 100, 100));
-        }
-        walkAnimation = new Animation(1/5f, frames);
-        frames.clear();
-        // Create a standing frame
-        standFrame = new TextureRegion(soldier_tex, 0, 0, 100, 100);
 
+        Texture idleSheet = new Texture("sprites/bandit/idle.png");
+        Texture walkSheet = new Texture("sprites/bandit/walk.png");
+        Texture gunSheet= new Texture("sprites/bandit/gun.png");
+        Texture shootSheet = new Texture("sprites/bandit/shoot.png");
+
+        Array<TextureRegion> frames = new Array<TextureRegion>();
+
+        // Create an idling animation
+        for (int i = 0; i < 5; i++) {
+            frames.add(new TextureRegion(idleSheet, i*60, 0, 60, 45));
+        }
+        idleAnimation = new Animation(1/5f, frames);
+        frames.clear();
+
+        // Create a walking animation
+        for (int i = 0; i < 9; i++) {
+            frames.add(new TextureRegion(walkSheet, i*60, 0, 60, 45));
+        }
+        walkAnimation = new Animation(1/10f, frames);
+        frames.clear();
+
+        // Create a pulling-out-gun animation
+        for (int i = 0; i < 6; i++) {
+            frames.add(new TextureRegion(gunSheet, i*60, 0, 60, 45));
+        }
+        gunAnimation = new Animation(1/10f, frames);
+        frames.clear();
+
+        // Create a shooting animation
+        for (int i = 0; i < 5; i++) {
+            frames.add(new TextureRegion(shootSheet, i*60, 0, 60, 45));
+        }
+        shootAnimation = new Animation(1/10f, frames);
+        frames.clear();
         waiting = false;
 
         // Set initial values for the soldier_textures location, width and height
         setBounds(0, 0, 36/PPM, 36/PPM);
-        setRegion(standFrame);
 
         p1 = new Vector2();
         p2 = new Vector2();
         collision = new Vector2();
         playerSeen = false;
+        seenTime = 0;
         bullets = new Array<Bullet>();
 
         setToDestroy = false;
@@ -107,35 +134,49 @@ public class Soldier extends Enemy {
             currentState = getState();
 
             // p1 = bat's coordinates; p2 = player's coordinates
-            p1.set(b2body.getPosition().x, b2body.getPosition().y);
+            if (facingRight) p1.set(b2body.getPosition().x + 12/PPM, b2body.getPosition().y + 5/PPM);
+            else p1.set(b2body.getPosition().x - 12/PPM, b2body.getPosition().y + 5/PPM);
             p2.set(screen.getPlayer().b2body.getPosition().x,
                     screen.getPlayer().b2body.getPosition().y);
 
             playerSeen = isPlayerVisible();
             if (playerSeen) {
-                // Stop, and shoot at the enemy with a unit direction vector
-                attack((p2.sub(p1)).setLength(1));
-                currentState = State.ATTACKING;
                 velocity.set(0, 0);
-            }
-            else if (patrolling && waiting) {
-                if (stateTimer < WAIT_TIME) {
-                    velocity.set(0, 0);
+                seenTime += dt;
+                if (seenTime > gunAnimation.getAnimationDuration()) {
+                    // Shoot at the enemy with a unit direction vector
+                    attack((p2.sub(p1)).setLength(1));
+                    currentState = State.SHOOTING;
                 }
-                else {
-                    facingRight = !facingRight;
+            }
+            else {
+                if (currentState != State.DRAWING && currentState != State.SHOOTING) {
+                    seenTime = 0;
+                }
+                if (patrolling && waiting) {
+                    if (stateTimer < WAIT_TIME) {
+                        velocity.set(0, 0);
+                    }
+                    else {
+                        facingRight = !facingRight;
+                        if (facingRight) velocity.set(SPEED, 0);
+                        else velocity.set(-SPEED, 0);
+                        waiting = false;
+                    }
+                }
+                else if (patrolling){
                     if (facingRight) velocity.set(SPEED, 0);
                     else velocity.set(-SPEED, 0);
-                    waiting = false;
                 }
-            }
-            else if (patrolling){
-                if (facingRight) velocity.set(SPEED, 0);
-                else velocity.set(-SPEED, 0);
             }
 
             b2body.setLinearVelocity(velocity);
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 3/PPM);
+            if (facingRight) {
+                setPosition(b2body.getPosition().x - getWidth()/2 + 8/PPM, b2body.getPosition().y - getHeight() / 2 + 3 / PPM);
+            }
+            else {
+                setPosition(b2body.getPosition().x - getWidth()/2 - 8/PPM, b2body.getPosition().y - getHeight() / 2 + 3 / PPM);
+            }
             setRegion(getFrame(dt));
 
             // Raycast to determine if the soldier can see the player
@@ -153,25 +194,28 @@ public class Soldier extends Enemy {
     public TextureRegion getFrame(float dt) {
         TextureRegion region;
         switch(currentState) {
-            case ATTACKING:
-                region = walkAnimation.getKeyFrame(stateTimer, true);
+            case IDLING:
+                region = idleAnimation.getKeyFrame(stateTimer, true);
                 break;
             case PATROLLING:
                 region = walkAnimation.getKeyFrame(stateTimer, true);
                 break;
-            case STATIONARY:
-                region = standFrame;
+            case DRAWING:
+                region = gunAnimation.getKeyFrame(stateTimer, false);
+                break;
+            case SHOOTING:
+                region = shootAnimation.getKeyFrame(stateTimer, true);
                 break;
             default:
-                region = standFrame;
+                region = idleAnimation.getKeyFrame(stateTimer, true);
                 break;
         }
         // If soldier is walking left and the texture isn't facing left, flip it
-        if (!facingRight && !region.isFlipX()) {
+        if (facingRight && !region.isFlipX()) {
             region.flip(true, false);
         }
         // Else if soldier is walking right and the texture isn't facing right, flip it
-        else if (facingRight && region.isFlipX()) {
+        else if (!facingRight && region.isFlipX()) {
             region.flip(true, false);
         }
 
@@ -191,19 +235,24 @@ public class Soldier extends Enemy {
      */
     public State getState(){
         if (playerSeen) {
-            return State.ATTACKING;
+            if (seenTime <= gunAnimation.getAnimationDuration()) {
+                return State.DRAWING;
+            }
+            else {
+                return State.SHOOTING;
+            }
         }
         else if(Math.abs(b2body.getLinearVelocity().x) >= 0.01) {
             return State.PATROLLING;
         }
         else {
-            return State.STATIONARY;
+            return State.IDLING;
         }
 
     }
 
     /**
-     * Define the Soldier in Box2D
+     * Define the Bandit in Box2D
      */
     public void defineEnemy() {
         BodyDef bdef = new BodyDef();
@@ -212,8 +261,8 @@ public class Soldier extends Enemy {
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(10 / PPM);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(6/PPM, 11/PPM);
         fdef.filter.categoryBits = SOLDIER_BIT;
         fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | MONKEY_BIT | MARKER_BIT | BAT_BIT | BULLET_BIT;
         fdef.shape = shape;
@@ -241,11 +290,19 @@ public class Soldier extends Enemy {
      */
     private void attack(Vector2 direction) {
         // So that the vision line can be drawn to the screen
-        //screen.addRay(p1, collision);
+        screen.addRay(p1, collision);
         // If this is the first shot, shoot immediately
-        if (previousState != State.ATTACKING || stateTimer > 0.4) {
-            float bulletX = facingRight ? p1.x + (20/PPM) : p1.x - (20/PPM);
-            bullets.add(new Bullet(screen, this, bulletX, p1.y, direction));
+        if (previousState != State.SHOOTING || stateTimer > 0.4) {
+            Vector2 bulletSpawn = new Vector2();
+            // Add some element of randomness to the shooting patterns
+            float offset = -20/PPM + ((float)Math.random()*40)/PPM;
+            if (facingRight) {
+                bulletSpawn.set(b2body.getPosition().x + (12/PPM), b2body.getPosition().y + 5 / PPM);
+            }
+            else {
+                bulletSpawn.set(b2body.getPosition().x - 12 / PPM, b2body.getPosition().y + 5/PPM);
+            }
+            bullets.add(new Bullet(screen, this, bulletSpawn, direction.add(0, offset)));
             stateTimer = 0;
         }
     }
@@ -302,7 +359,6 @@ public class Soldier extends Enemy {
     }
 
     public void dispose() {
-        soldier_tex.dispose();
     }
 
 }

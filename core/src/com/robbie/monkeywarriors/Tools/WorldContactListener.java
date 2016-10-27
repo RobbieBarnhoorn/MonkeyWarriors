@@ -1,9 +1,9 @@
 package com.robbie.monkeywarriors.Tools;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.robbie.monkeywarriors.Sprites.Enemies.Bandit;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bullet;
-import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
@@ -35,10 +35,10 @@ public class WorldContactListener implements ContactListener {
                 break;
             case MARKER_BIT | SOLDIER_BIT:
                 if (fixA.getFilterData().categoryBits == SOLDIER_BIT) {
-                    ((Soldier) fixA.getUserData()).setWaiting();
+                    ((Bandit) fixA.getUserData()).setWaiting();
                 }
                 else {
-                    ((Soldier)fixB.getUserData()).setWaiting();
+                    ((Bandit)fixB.getUserData()).setWaiting();
                 }
                 break;
             case MONKEY_BIT | GROUND_BIT:
@@ -112,14 +112,14 @@ public class WorldContactListener implements ContactListener {
                 if (fixA.getFilterData().categoryBits == BULLET_BIT) {
                     Bullet bullet = (Bullet) fixA.getUserData();
                     bullet.setToDestroy();
-                    Soldier soldier = (Soldier)fixB.getUserData();
-                    soldier.setToDestroy();
+                    Bandit bandit = (Bandit)fixB.getUserData();
+                    bandit.setToDestroy();
                 }
                 else {
                     Bullet bullet = (Bullet) fixB.getUserData();
                     bullet.setToDestroy();
-                    Soldier soldier = (Soldier)fixA.getUserData();
-                    soldier.setToDestroy();
+                    Bandit bandit = (Bandit)fixA.getUserData();
+                    bandit.setToDestroy();
                 }
                 break;
             case BULLET_BIT | BAT_BIT:
@@ -140,14 +140,14 @@ public class WorldContactListener implements ContactListener {
                 if (fixA.getFilterData().categoryBits == BAT_BIT) {
                     Bat bat = (Bat) fixA.getUserData();
                     bat.setToDestroy();
-                    Soldier soldier = (Soldier)fixB.getUserData();
-                    soldier.setToDestroy();
+                    Bandit bandit = (Bandit)fixB.getUserData();
+                    bandit.setToDestroy();
                 }
                 else {
                     Bat bat = (Bat) fixB.getUserData();
                     bat.setToDestroy();
-                    Soldier soldier = (Soldier)fixA.getUserData();
-                    soldier.setToDestroy();
+                    Bandit bandit = (Bandit)fixA.getUserData();
+                    bandit.setToDestroy();
                 }
                 break;
         }

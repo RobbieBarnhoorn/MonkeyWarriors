@@ -17,16 +17,16 @@ public class Bullet extends Enemy {
 
     private Texture tex;
     private TextureRegion bullet;
-    private Soldier soldier;
+    private Bandit bandit;
 
     private boolean setToDestroy;
     private boolean destroyed;
 
     private final static float VELOCITY = 1f;
 
-    public Bullet(PlayScreen screen, Soldier soldier, float x, float y, Vector2 dir) {
-        super(screen, x, y);
-        this.soldier = soldier;
+    public Bullet(PlayScreen screen, Bandit bandit, Vector2 spawn, Vector2 dir) {
+        super(screen, spawn.x, spawn.y);
+        this.bandit = bandit;
         tex = new Texture("sprites/bandit/bullet.png");
         bullet = new TextureRegion(tex, 0, 0, 32, 32);
         setBounds(0, 0, 16/PPM, 16/PPM);
@@ -41,7 +41,7 @@ public class Bullet extends Enemy {
     public void update(float dt) {
         if (setToDestroy && !destroyed) {
             world.destroyBody(b2body);
-            soldier.removeBullet(this);
+            bandit.removeBullet(this);
             destroyed = true;
         }
         else if (!destroyed) {

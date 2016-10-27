@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.robbie.monkeywarriors.MonkeyWarriors;
 import com.robbie.monkeywarriors.Scenes.Hud;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
-import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 import com.robbie.monkeywarriors.Tools.B2WorldCreator;
 import com.robbie.monkeywarriors.Tools.WorldContactListener;
@@ -220,12 +218,12 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        //b2dr.render(world, gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 
         // Render our vision lines
-        /*for (int i = 0; i < p1Array.size; i++) {
+        for (int i = 0; i < p1Array.size; i++) {
             drawDebugLine(p1Array.get(i), p2Array.get(i), gamecam.combined);
-        }*/
+        }
 
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);

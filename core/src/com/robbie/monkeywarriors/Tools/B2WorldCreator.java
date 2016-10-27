@@ -1,17 +1,15 @@
 package com.robbie.monkeywarriors.Tools;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.robbie.monkeywarriors.Screens.PlayScreen;
+import com.robbie.monkeywarriors.Sprites.Enemies.Bandit;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
-import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
@@ -22,7 +20,7 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 public class B2WorldCreator {
 
     private Monkey player;
-    private Array<Soldier> soldiers;
+    private Array<Bandit> soldiers;
     private Array<Bat> bats;
 
     private PlayScreen screen;
@@ -44,7 +42,7 @@ public class B2WorldCreator {
         fdef = new FixtureDef();
 
         // Enemies array
-        soldiers = new Array<Soldier>();
+        soldiers = new Array<Bandit>();
 
         createGround();
         createLava();
@@ -90,13 +88,13 @@ public class B2WorldCreator {
     }
 
     private void createSoldiers() {
-        soldiers = new Array<Soldier>();
+        soldiers = new Array<Bandit>();
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
             boolean patrolling = object.getProperties().get("Patrol").equals(true);
             boolean facingRight = object.getProperties().get("Direction").equals("Right");
-            Soldier soldier = new Soldier(screen, rect.getX()/PPM, rect.getY()/PPM, facingRight, patrolling);
-            soldiers.add(soldier);
+            Bandit bandit = new Bandit(screen, rect.getX()/PPM, rect.getY()/PPM, facingRight, patrolling);
+            soldiers.add(bandit);
         }
     }
 
