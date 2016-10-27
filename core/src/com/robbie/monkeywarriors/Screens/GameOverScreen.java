@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,11 +21,12 @@ import com.robbie.monkeywarriors.MonkeyWarriors;
  */
 public class GameOverScreen implements Screen {
 
-    private Game game;
+    private MonkeyWarriors game;
     private Viewport viewport;
     private Stage stage;
+    private Music music;
 
-    public GameOverScreen(Game game) {
+    public GameOverScreen(MonkeyWarriors game) {
         this.game = game;
         viewport = new FitViewport(MonkeyWarriors.V_WIDTH,
                 MonkeyWarriors.V_HEIGHT,
@@ -48,6 +50,11 @@ public class GameOverScreen implements Screen {
         table.add(escapeLabel).expandX().padTop(10f);
 
         stage.addActor(table);
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/game_over.mp3"));
+        music.setLooping(false);
+        music.setVolume(0.3f);
+        music.play();
     }
 
     @Override
@@ -57,7 +64,7 @@ public class GameOverScreen implements Screen {
 
     public void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-            game.setScreen(new PlayScreen((MonkeyWarriors) game));
+            game.setScreen(new PlayScreen(game));
             dispose();
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -96,5 +103,6 @@ public class GameOverScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        music.dispose();
     }
 }

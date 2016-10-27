@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="16" tileheight="16" nextobjectid="397">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="16" tileheight="16" nextobjectid="401">
  <tileset firstgid="1" name="grotto" tilewidth="16" tileheight="16" tilecount="40" columns="8">
   <image source="grotto.png" width="128" height="80"/>
  </tileset>
@@ -129,7 +129,6 @@
   <object id="286" x="64" y="80" width="32" height="32"/>
   <object id="287" x="96" y="80" width="16" height="16"/>
   <object id="288" x="224" y="144" width="48" height="48"/>
-  <object id="290" x="96" y="160" width="64" height="32"/>
   <object id="291" x="80" y="176" width="16" height="16"/>
   <object id="292" x="96" y="192" width="16" height="32"/>
   <object id="295" x="0" y="160" width="16" height="160"/>
@@ -163,12 +162,12 @@
   <object id="359" x="480" y="192" width="48" height="16"/>
   <object id="360" x="320" y="160" width="352" height="16"/>
   <object id="361" x="1520" y="272" width="32" height="16"/>
-  <object id="372" x="160" y="160" width="32" height="32"/>
-  <object id="377" x="800" y="224" width="32" height="32"/>
-  <object id="378" x="832" y="224" width="128" height="48"/>
   <object id="379" x="800" y="304" width="160" height="96"/>
   <object id="380" x="848" y="272" width="112" height="32"/>
   <object id="381" x="816" y="288" width="32" height="16"/>
+  <object id="397" x="800" y="224" width="160" height="32"/>
+  <object id="398" x="832" y="256" width="128" height="16"/>
+  <object id="399" x="96" y="160" width="96" height="32"/>
  </objectgroup>
  <objectgroup name="lava">
   <object id="172" x="256" y="390" width="80" height="10"/>
@@ -191,7 +190,7 @@
     <property name="Patrol" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="210" x="1104" y="288" width="16" height="16">
+  <object id="210" x="1120" y="224" width="16" height="16">
    <properties>
     <property name="Direction" value="Right"/>
     <property name="Patrol" type="bool" value="true"/>
@@ -227,8 +226,8 @@
   <object id="198" x="560" y="368" width="16" height="16"/>
   <object id="207" x="784" y="208" width="16" height="16"/>
   <object id="208" x="960" y="208" width="16" height="16"/>
-  <object id="211" x="1152" y="288" width="16" height="16"/>
-  <object id="212" x="1056" y="288" width="16" height="16"/>
+  <object id="211" x="1152" y="224" width="16" height="16"/>
+  <object id="212" x="1088" y="224" width="16" height="16"/>
   <object id="215" x="1296" y="256" width="16" height="16"/>
   <object id="216" x="1232" y="256" width="16" height="16"/>
   <object id="275" x="224" y="256" width="16" height="16"/>

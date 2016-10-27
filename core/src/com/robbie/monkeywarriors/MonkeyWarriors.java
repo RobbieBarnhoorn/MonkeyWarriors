@@ -1,6 +1,10 @@
 package com.robbie.monkeywarriors;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.MusicLoader;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.robbie.monkeywarriors.Screens.MainMenuScreen;
 
@@ -22,8 +26,6 @@ public class MonkeyWarriors extends Game {
 	public static final short BAT_BIT = 32;
 	public static final short BULLET_BIT = 64;
 
-
-
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -40,4 +42,5 @@ public class MonkeyWarriors extends Game {
         super.dispose();
 		batch.dispose();
 	}
+
 }

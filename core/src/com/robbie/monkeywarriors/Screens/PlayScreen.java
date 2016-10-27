@@ -3,6 +3,7 @@ package com.robbie.monkeywarriors.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -36,7 +37,7 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gamecam;
     private Viewport gameport;
     private Hud hud;
-
+    private Music music;
 
     //Tiled map variables
     private TiledMap map;
@@ -110,6 +111,10 @@ public class PlayScreen implements Screen {
         p1Array = new Array<Vector2>();
         p2Array = new Array<Vector2>();
 
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_2.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.3f);
+        music.play();
     }
 
     @Override
@@ -218,20 +223,20 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
 
         // Render our vision lines
-        for (int i = 0; i < p1Array.size; i++) {
+        /*for (int i = 0; i < p1Array.size; i++) {
             drawDebugLine(p1Array.get(i), p2Array.get(i), gamecam.combined);
-        }
+        }*/
 
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
         if (player.isDead()) {
-            game.setScreen(new GameOverScreen(game));
             dispose();
+            game.setScreen(new GameOverScreen(game));
         }
     }
 
@@ -264,6 +269,7 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        music.dispose();
     }
 
     public World getWorld() {

@@ -29,7 +29,7 @@ public class Bullet extends Enemy {
         this.bandit = bandit;
         tex = new Texture("sprites/bandit/bullet.png");
         bullet = new TextureRegion(tex, 0, 0, 32, 32);
-        setBounds(0, 0, 16/PPM, 16/PPM);
+        setBounds(0, 0, 8/PPM, 8/PPM);
         setRegion(bullet);
         b2body.applyLinearImpulse(dir.scl(VELOCITY), b2body.getWorldCenter(), true);
 

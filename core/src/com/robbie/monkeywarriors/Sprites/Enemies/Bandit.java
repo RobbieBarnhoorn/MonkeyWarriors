@@ -86,7 +86,7 @@ public class Bandit extends Enemy {
         for (int i = 0; i < 5; i++) {
             frames.add(new TextureRegion(idleSheet, i*60, 0, 60, 45));
         }
-        idleAnimation = new Animation(1/5f, frames);
+        idleAnimation = new Animation(1/4f, frames);
         frames.clear();
 
         // Create a walking animation
@@ -172,10 +172,12 @@ public class Bandit extends Enemy {
 
             b2body.setLinearVelocity(velocity);
             if (facingRight) {
-                setPosition(b2body.getPosition().x - getWidth()/2 + 8/PPM, b2body.getPosition().y - getHeight() / 2 + 3 / PPM);
+                setPosition(b2body.getPosition().x - getWidth()/2 + 8/PPM,
+                        b2body.getPosition().y - getHeight()/2 + 1/PPM);
             }
             else {
-                setPosition(b2body.getPosition().x - getWidth()/2 - 8/PPM, b2body.getPosition().y - getHeight() / 2 + 3 / PPM);
+                setPosition(b2body.getPosition().x - getWidth()/2 - 8/PPM,
+                        b2body.getPosition().y - getHeight()/2 + 1/PPM);
             }
             setRegion(getFrame(dt));
 
