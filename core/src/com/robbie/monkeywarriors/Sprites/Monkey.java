@@ -26,10 +26,9 @@ public class Monkey extends Sprite {
     public World world;
     public Body b2body;
 
-    private TextureRegion standFrame;
+    private TextureRegion idleFrame;
     private Animation runAnimation;
 
-    private PlayScreen screen;
     private float stateTimer;
     private final static float moveSpeed = 1.1f;
     private final static float jumpSpeed = 2.2f;
@@ -38,7 +37,6 @@ public class Monkey extends Sprite {
     public boolean canDoubleJump;
 
     public Monkey(PlayScreen screen, float x, float y) {
-        this.screen = screen;
         setPosition(x, y);
         this.world = screen.getWorld();
         currentState = State.STANDING;
@@ -52,22 +50,25 @@ public class Monkey extends Sprite {
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
 
+        Texture walkSheet = new Texture("sprites/monkey/monkey_walk.png");
+        Texture idleSheet = new Texture("sprites/monkey/monkey_stand.png");
+
         // Create runAnimation animation
         for (int i = 0; i < 3; i++) {
-            frames.add(new TextureRegion(new Texture("sprites/monkey/monkey_walk.png"), i*32, 0, 32, 32));
+            frames.add(new TextureRegion(walkSheet, i*32, 0, 32, 32));
         }
         runAnimation = new Animation(1/12f, frames);
 
         frames.clear();
 
-        // Create standFrame frame
-        standFrame = new TextureRegion(new Texture("sprites/monkey/monkey_stand.png"), 0, 0, 32, 32);
+        // Create idleFrame frame
+        idleFrame = new TextureRegion(idleSheet, 0, 0, 32, 32);
 
         defineMonkey();
 
         // Set initial values for the textures location, width and height
         setBounds(0, 0, 24/PPM, 24/PPM);
-        setRegion(standFrame);
+        setRegion(idleFrame);
     }
 
     public void update(float dt) {
@@ -136,12 +137,12 @@ public class Monkey extends Sprite {
                 break;
             case JUMPING:
             case DOUBLE_JUMPING:
-                region = standFrame;
+                region = idleFrame;
                 break;
             case STANDING:
             case DEAD:
             default:
-                region = standFrame;
+                region = idleFrame;
                 break;
         }
 

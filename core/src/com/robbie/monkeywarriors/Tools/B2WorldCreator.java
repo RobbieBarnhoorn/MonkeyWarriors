@@ -93,7 +93,7 @@ public class B2WorldCreator {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
             boolean patrolling = object.getProperties().get("Patrol").equals(true);
             boolean facingRight = object.getProperties().get("Direction").equals("Right");
-            Bandit bandit = new Bandit(screen, rect.getX()/PPM, rect.getY()/PPM, facingRight, patrolling);
+            Bandit bandit = new Bandit(screen, rect.getX()/PPM + (rect.getWidth()/2)/PPM, rect.getY()/PPM, facingRight, patrolling);
             soldiers.add(bandit);
         }
     }
