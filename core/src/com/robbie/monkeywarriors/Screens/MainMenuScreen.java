@@ -3,7 +3,6 @@ package com.robbie.monkeywarriors.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,15 +23,16 @@ public class MainMenuScreen implements Screen {
     private Viewport viewport;
 
     private TextureRegion background;
+    private Button nameButton;
     private Button newButton;
     private Button resumeButton;
     private Button creditsButton;
     private Button exitButton;
 
-    private Music music;
-
-    private final float BUTTONWIDTH = 80*10;
-    private final float BUTTONHEIGHT = 20*10;
+    private final float NAME_WIDTH= 140*13;
+    private final float NAME_HEIGHT= 20*13;
+    private final float BUTTON_WIDTH = 80*10;
+    private final float BUTTON_HEIGHT = 20*10;
 
     public MainMenuScreen(MonkeyWarriors game) {
         this.game = game;
@@ -42,12 +42,8 @@ public class MainMenuScreen implements Screen {
         //initially set our gamcam to be centered correctly at the start of of map
         cam.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
+        background = new TextureRegion(new Texture("menu/background1.png"));
         initButtons(); // Initialize the buttons
-
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/temple_2.mp3"));
-        music.setLooping(true);
-        music.setVolume(0.3f);
-        music.play();
     }
 
     @Override
@@ -75,6 +71,7 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         game.batch.draw(background, 0, 0);
+        nameButton.update(game.batch);
         newButton.update(game.batch, mouseX, mouseY, clicked, delta);
         resumeButton.update(game.batch, mouseX, mouseY, clicked, delta);
         creditsButton.update(game.batch, mouseX, mouseY, clicked, delta);
@@ -86,26 +83,30 @@ public class MainMenuScreen implements Screen {
     private void initButtons() {
         float width = viewport.getWorldWidth();
         float height = viewport.getWorldHeight();
+        Texture name = new Texture("menu/name.png");
         Texture buttons = new Texture("menu/buttons.png");
         Texture hover_buttons = new Texture("menu/hover_buttons.png");
 
+        nameButton = new Button(new TextureRegion(name, 0, 0, 140, 20),
+                new TextureRegion(name, 0, 0, 140, 20),
+                width - 0.25f * NAME_WIDTH, height + 2.6f * BUTTON_HEIGHT, NAME_WIDTH, NAME_HEIGHT);
+
         newButton = new Button(new TextureRegion(buttons, 0, 0, 80, 20),
                 new TextureRegion(hover_buttons, 0, 0, 80, 20),
-                width + 0.1f*BUTTONWIDTH, height + 2.2f * BUTTONHEIGHT, BUTTONWIDTH, BUTTONHEIGHT);
+                width + 0.05f * BUTTON_WIDTH, height + 1.6f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         resumeButton = new Button(new TextureRegion(buttons, 80, 0, 80, 20),
                 new TextureRegion(hover_buttons, 80, 0, 80, 20),
-                width + 0.1f*BUTTONWIDTH, height + 1.2f * BUTTONHEIGHT, BUTTONWIDTH, BUTTONHEIGHT);
+                width + 0.05f * BUTTON_WIDTH, height + 0.6f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         creditsButton = new Button(new TextureRegion(buttons, 160, 0, 80, 20),
                 new TextureRegion(hover_buttons, 160, 0, 80, 20),
-                width + 0.1f*BUTTONWIDTH, height + 0.2f * BUTTONHEIGHT, BUTTONWIDTH, BUTTONHEIGHT);
+                width + 0.05f * BUTTON_WIDTH, height + -0.4f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         exitButton = new Button(new TextureRegion(buttons, 240, 0, 80, 20),
                 new TextureRegion(hover_buttons, 240, 0, 80, 20),
-                width + 0.1f*BUTTONWIDTH, height - 0.8f * BUTTONHEIGHT, BUTTONWIDTH, BUTTONHEIGHT);
+                width + 0.05f * BUTTON_WIDTH, height - 1.4f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        background = new TextureRegion(new Texture("menu/background1.png"));
 
         newButton.setName("newButton");
         resumeButton.setName("resumeButton");
@@ -123,7 +124,8 @@ public class MainMenuScreen implements Screen {
                 @Override
                 public void handleClick() {
                     dispose();
-                    game.setScreen(new PlayScreen(game));
+                    game.music.dispose();
+                    game.setScreen(new PlayScreen(game, "level2"));
                 }
             });
         }
@@ -132,7 +134,8 @@ public class MainMenuScreen implements Screen {
                 @Override
                 public void handleClick() {
                     dispose();
-                    game.setScreen(new PlayScreen(game));
+                    game.music.dispose();
+                    game.setScreen(new PlayScreen(game, "level2"));
                 }
             });
         }
@@ -141,7 +144,7 @@ public class MainMenuScreen implements Screen {
                 @Override
                 public void handleClick() {
                     dispose();
-                    Gdx.app.exit();
+                    game.setScreen(new CreditsScreen(game));
                 }
             });
         }
@@ -178,7 +181,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        music.dispose();
         background.getTexture().dispose();
     }
 

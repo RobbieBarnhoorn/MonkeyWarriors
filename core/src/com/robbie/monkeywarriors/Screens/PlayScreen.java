@@ -3,7 +3,6 @@ package com.robbie.monkeywarriors.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -37,7 +36,6 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gamecam;
     private Viewport gameport;
     private Hud hud;
-    private Music music;
 
     //Tiled map variables
     private TiledMap map;
@@ -67,7 +65,7 @@ public class PlayScreen implements Screen {
     public Array<Vector2> p2Array;
 
 
-    public PlayScreen(MonkeyWarriors game) {
+    public PlayScreen(MonkeyWarriors game, String level) {
         this.game = game;
 
         // Camera that follows player throughout world
@@ -82,7 +80,7 @@ public class PlayScreen implements Screen {
 
         // Load our map and setup our map renderer
         TmxMapLoader maploader = new TmxMapLoader();
-        map = maploader.load("levels/level2.tmx");
+        map = maploader.load("levels/" + level + ".tmx");
         mapProperties = map.getProperties();
         mapWidth = mapProperties.get("width", Integer.class);
         mapHeight = mapProperties.get("height", Integer.class);
@@ -111,10 +109,10 @@ public class PlayScreen implements Screen {
         p1Array = new Array<Vector2>();
         p2Array = new Array<Vector2>();
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_3.mp3"));
-        music.setLooping(true);
-        music.setVolume(0.3f);
-        music.play();
+        game.music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_3.mp3"));
+        game.music.setLooping(true);
+        game.music.setVolume(0.3f);
+        game.music.play();
     }
 
     @Override
@@ -269,7 +267,7 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
-        music.dispose();
+        game.music.dispose();
     }
 
     public World getWorld() {

@@ -1,7 +1,5 @@
 package com.robbie.monkeywarriors.Scenes;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -38,6 +36,15 @@ public class Button {
             time = 0;
         }
         img.draw(batch); // draw the button
+    }
+
+    public void update (SpriteBatch batch, float input_x, float input_y, boolean clicked) {
+        checkAction(input_x, input_y, clicked);
+        img.draw(batch); // draw the button
+    }
+
+    public void update(SpriteBatch batch) {
+        img.draw(batch);
     }
 
     /**

@@ -20,7 +20,8 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 public class Bandit extends Enemy {
 
     private static final float SPEED = 0.3f;
-    private static final float WAIT_TIME = 2.5f;
+    private static final float WAIT_TIME = 2.4f;
+    private static float VISION_RANGE = 175/PPM;
 
     // What the soldier is currently doing
     private enum State {PATROLLING, IDLING, TURNING, DRAWING, SHOOTING}
@@ -42,7 +43,6 @@ public class Bandit extends Enemy {
     private Vector2 p1;
     private Vector2 p2;
     private Vector2 collision;
-    private static float VISION_RANGE = 170/PPM;
     private boolean playerSeen;
     private float seenTime;
 
@@ -173,11 +173,11 @@ public class Bandit extends Enemy {
             b2body.setLinearVelocity(velocity);
             if (facingRight) {
                 setPosition(b2body.getPosition().x - getWidth()/2 + 8/PPM,
-                        b2body.getPosition().y - getHeight()/2 + 1/PPM);
+                        b2body.getPosition().y - getHeight()/2);
             }
             else {
                 setPosition(b2body.getPosition().x - getWidth()/2 - 8/PPM,
-                        b2body.getPosition().y - getHeight()/2 + 1/PPM);
+                        b2body.getPosition().y - getHeight()/2);
             }
             setRegion(getFrame(dt));
 
@@ -264,7 +264,7 @@ public class Bandit extends Enemy {
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(6/PPM, 13/PPM);
+        shape.setAsBox(6/PPM, 12/PPM);
         fdef.filter.categoryBits = SOLDIER_BIT;
         fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | MONKEY_BIT | MARKER_BIT | BAT_BIT | BULLET_BIT;
         fdef.shape = shape;

@@ -31,7 +31,7 @@ public class GameOverScreen implements Screen {
         viewport = new FitViewport(MonkeyWarriors.V_WIDTH,
                 MonkeyWarriors.V_HEIGHT,
                 new OrthographicCamera());
-        stage = new Stage(viewport, ((MonkeyWarriors) game).batch);
+        stage = new Stage(viewport, game.batch);
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
@@ -64,7 +64,7 @@ public class GameOverScreen implements Screen {
 
     public void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-            game.setScreen(new PlayScreen(game));
+            game.setScreen(new PlayScreen(game, "level2"));
             dispose();
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {

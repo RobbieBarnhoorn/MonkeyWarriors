@@ -1,6 +1,7 @@
 package com.robbie.monkeywarriors;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.audio.Music;
@@ -11,6 +12,7 @@ import com.robbie.monkeywarriors.Screens.MainMenuScreen;
 public class MonkeyWarriors extends Game {
 
 	public SpriteBatch batch;
+	public Music music;
 
 	public static final int V_WIDTH = 16*32;
 	public static final int V_HEIGHT = 9*32;
@@ -29,6 +31,10 @@ public class MonkeyWarriors extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		music = Gdx.audio.newMusic(Gdx.files.internal("music/temple_2.mp3"));
+		music.setLooping(true);
+		music.setVolume(0.3f);
+		music.play();
         setScreen(new MainMenuScreen(this));
 	}
 
