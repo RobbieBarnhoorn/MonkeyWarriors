@@ -3,6 +3,7 @@ package com.robbie.monkeywarriors.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,6 +29,8 @@ public class MainMenuScreen implements Screen {
     private Button creditsButton;
     private Button exitButton;
 
+    private Music music;
+
     private final float BUTTONWIDTH = 80*10;
     private final float BUTTONHEIGHT = 20*10;
 
@@ -40,6 +43,11 @@ public class MainMenuScreen implements Screen {
         cam.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         initButtons(); // Initialize the buttons
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/temple_2.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.3f);
+        music.play();
     }
 
     @Override
@@ -67,10 +75,10 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         game.batch.draw(background, 0, 0);
-        newButton.update(game.batch, mouseX, mouseY, clicked);
-        resumeButton.update(game.batch, mouseX, mouseY, clicked);
-        creditsButton.update(game.batch, mouseX, mouseY, clicked);
-        exitButton.update(game.batch, mouseX, mouseY, clicked);
+        newButton.update(game.batch, mouseX, mouseY, clicked, delta);
+        resumeButton.update(game.batch, mouseX, mouseY, clicked, delta);
+        creditsButton.update(game.batch, mouseX, mouseY, clicked, delta);
+        exitButton.update(game.batch, mouseX, mouseY, clicked, delta);
         game.batch.end();
     }
 
@@ -170,7 +178,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        music.dispose();
+        background.getTexture().dispose();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.robbie.monkeywarriors.Scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,16 +17,26 @@ public class Button {
     private TextureRegion hover;
     private String name;
     private ActionHandler actionHandler;
+    private float time;
+    private float dy;
 
     public Button(TextureRegion regular, TextureRegion hover, float x, float y, float width, float height) {
         this.regular = regular;
         this.hover = hover;
         img = new Sprite(regular);
         img.setBounds(x, y, width, height);
+        time = 0;
+        dy = 0.5f;
     }
 
-    public void update (SpriteBatch batch, float input_x, float input_y, boolean clicked) {
+    public void update (SpriteBatch batch, float input_x, float input_y, boolean clicked, float dt) {
+        time += dt;
         checkAction(input_x, input_y, clicked);
+        img.translateY(dy*dt*30);
+        if (time > 1.8) {
+            dy = -dy;
+            time = 0;
+        }
         img.draw(batch); // draw the button
     }
 

@@ -54,7 +54,7 @@ public class B2WorldCreator {
 
     private void createGround() {
 
-        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -71,7 +71,7 @@ public class B2WorldCreator {
     }
 
     private void createLava() {
-        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -82,14 +82,14 @@ public class B2WorldCreator {
             shape.setAsBox(rect.getWidth()/2/PPM, rect.getHeight()/2/PPM);
             fdef.shape = shape;
             fdef.filter.categoryBits = LAVA_BIT;
-            fdef.filter.maskBits= MONKEY_BIT | BAT_BIT | SOLDIER_BIT | BULLET_BIT;
+            fdef.filter.maskBits = MONKEY_BIT | BAT_BIT | SOLDIER_BIT | BULLET_BIT;
             body.createFixture(fdef);
         }
     }
 
     private void createSoldiers() {
         soldiers = new Array<Bandit>();
-        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
             boolean patrolling = object.getProperties().get("Patrol").equals(true);
             boolean facingRight = object.getProperties().get("Direction").equals("Right");
@@ -99,7 +99,7 @@ public class B2WorldCreator {
     }
 
     private void createMarkers() {
-        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -117,7 +117,7 @@ public class B2WorldCreator {
     }
 
     private void createMonkey() {
-        MapObject object = map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class).get(0);
+        MapObject object = map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject)object).getRectangle();
         player = new Monkey(screen, (rect.getX() + rect.getWidth()/2)/PPM,
                 (rect.getY() + rect.getHeight()/2)/PPM);
@@ -125,7 +125,7 @@ public class B2WorldCreator {
 
     private void createBats() {
         bats = new Array<Bat>();
-        for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject)object).getRectangle();
             Bat bat = new Bat(screen, (rect.getX() + rect.getWidth()/2)/PPM,
                     (rect.getY() + rect.getHeight()/2)/PPM);

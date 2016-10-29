@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="25" tilewidth="16" tileheight="16" nextobjectid="28">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="62" height="40" tilewidth="16" tileheight="16" nextobjectid="1">
  <tileset firstgid="1" name="grotto" tilewidth="16" tileheight="16" tilecount="40" columns="8">
   <image source="grotto.png" width="128" height="80"/>
  </tileset>
- <layer name="Background Layer" width="100" height="25">
+ <layer name="graphic" width="62" height="40">
   <data encoding="base64" compression="zlib">
-   eJzt1kEKgCAQheHZpm6qOWD3P0VCCiJaRoFG/+LD1zDZCC00ImIAAAAAAAAAAMCQJpGt9wxftDbqPSe+QwaYAQD+yt+HxIVsX9oH983eIscdSpPntB7XWHOhV7O+mG22Z+mbT1zNW8ta6M3PoBVn79Ryay3Nvf8HYGQ7jLplWw==
+   eJztwzENAAAMBKGb37/guugECaumqqqqqqqqqqqqzw9KimDh
   </data>
  </layer>
- <layer name="Graphic Layer" width="100" height="25">
-  <data encoding="base64" compression="zlib">
-   eJztll8OgjAMhysG9cXoiySKD/578BgezaN4FI9mSSBZZpUxFtY0vy/50gw6IGy0EAEAAAAAAGCXa4CXwDw3H8SR6v1jPdKQ8ptwI4gD66EL9A9doH/oAvVKF6hXukC90oWFerVhV4IV0XPiRxmNhXq1JXpI8nq8J36U0aBe6SJ3vWpqDe9luhO9mrjj6Ocs2xzXSsizwIwt2LkXi55xXwT64b1PJ6P7Gthkzx7Y2om1M/aPDbGbW7KL1lI4/+/+IdfPPT823/fInum7F7s9emhfl3r82vPXP4B0/yH/ELnmx+b73tgPcOZFjA==
-  </data>
- </layer>
- <objectgroup name="Ground">
-  <object id="2" x="0" y="368" width="400" height="32"/>
-  <object id="3" x="0" y="112.25" width="352" height="223.75"/>
-  <object id="14" x="464.5" y="368.5" width="1135.5" height="31.5"/>
-  <object id="19" x="432" y="336" width="32" height="16"/>
-  <object id="20" x="512" y="304" width="80" height="16"/>
-  <object id="21" x="656" y="304" width="96" height="16"/>
-  <object id="23" x="784" y="256" width="112" height="32"/>
- </objectgroup>
- <objectgroup name="Lava">
-  <object id="15" x="400.5" y="373.667" width="63.75" height="26.4167"/>
- </objectgroup>
- <objectgroup name="Soldier">
-  <object id="26" x="496" y="352" width="16" height="16"/>
-  <object id="27" x="864" y="240" width="16" height="16"/>
- </objectgroup>
+ <objectgroup name="ground"/>
+ <objectgroup name="lava"/>
+ <objectgroup name="enemy"/>
+ <objectgroup name="marker"/>
+ <objectgroup name="finish"/>
+ <objectgroup name="start"/>
+ <objectgroup name="bat"/>
 </map>

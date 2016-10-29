@@ -137,7 +137,7 @@ public class Monkey extends Sprite {
                 break;
             case JUMPING:
             case DOUBLE_JUMPING:
-                region = idleFrame;
+                region = runAnimation.getKeyFrame(stateTimer, true);
                 break;
             case STANDING:
             case DEAD:
@@ -147,12 +147,12 @@ public class Monkey extends Sprite {
         }
 
         // If monkey is running left and the texture isn't facing left, flip it
-        if ((b2body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()) {
+        if ((b2body.getLinearVelocity().x < 0.005 || !runningRight) && !region.isFlipX()) {
             region.flip(true, false);
             runningRight = false;
         }
         // Else if monkey is running right and the texture isn't facing right, flip it
-        else if ((b2body.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()) {
+        else if ((b2body.getLinearVelocity().x > 0.005 || runningRight) && region.isFlipX()) {
             region.flip(true, false);
             runningRight = true;
         }

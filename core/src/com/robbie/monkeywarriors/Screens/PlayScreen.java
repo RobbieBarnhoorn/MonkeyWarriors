@@ -111,7 +111,7 @@ public class PlayScreen implements Screen {
         p1Array = new Array<Vector2>();
         p2Array = new Array<Vector2>();
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_2.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_3.mp3"));
         music.setLooping(true);
         music.setVolume(0.3f);
         music.play();
@@ -223,7 +223,7 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        //b2dr.render(world, gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 
         // Render our vision lines
         /*for (int i = 0; i < p1Array.size; i++) {
