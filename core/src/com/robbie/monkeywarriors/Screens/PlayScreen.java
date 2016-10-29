@@ -223,7 +223,7 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
 
         // Render our vision lines
         /*for (int i = 0; i < p1Array.size; i++) {

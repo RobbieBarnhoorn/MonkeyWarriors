@@ -264,7 +264,7 @@ public class Bandit extends Enemy {
 
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(6/PPM, 11/PPM);
+        shape.setAsBox(6/PPM, 13/PPM);
         fdef.filter.categoryBits = SOLDIER_BIT;
         fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | MONKEY_BIT | MARKER_BIT | BAT_BIT | BULLET_BIT;
         fdef.shape = shape;

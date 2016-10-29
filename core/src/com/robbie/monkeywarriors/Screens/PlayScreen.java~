@@ -3,10 +3,10 @@ package com.robbie.monkeywarriors.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.robbie.monkeywarriors.MonkeyWarriors;
 import com.robbie.monkeywarriors.Scenes.Hud;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
-import com.robbie.monkeywarriors.Sprites.Enemies.Soldier;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 import com.robbie.monkeywarriors.Tools.B2WorldCreator;
 import com.robbie.monkeywarriors.Tools.WorldContactListener;
@@ -38,7 +37,7 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gamecam;
     private Viewport gameport;
     private Hud hud;
-
+    private Music music;
 
     //Tiled map variables
     private TiledMap map;
@@ -97,7 +96,7 @@ public class PlayScreen implements Screen {
         gamecam.position.set(gameport.getWorldWidth() / 2, gameport.getWorldHeight() / 2, 0);
 
         //create our Box2D world, setting no gravity in X, -10 gravity in Y, and allow bodies to sleep
-        world = new World(new Vector2(0, -9f), true);
+        world = new World(new Vector2(0, -8f), true);
         World.setVelocityThreshold(0);
 
         //allows for debug lines of our box2d world.
@@ -112,6 +111,10 @@ public class PlayScreen implements Screen {
         p1Array = new Array<Vector2>();
         p2Array = new Array<Vector2>();
 
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_3.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.3f);
+        music.play();
     }
 
     @Override
@@ -132,10 +135,10 @@ public class PlayScreen implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 player.movement.add(Monkey.Movement.UP);
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.movement.add(Monkey.Movement.RIGHT);
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 player.movement.add(Monkey.Movement.LEFT);
             }
         }
@@ -220,7 +223,7 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Render our Box2DDebugLines
-        //b2dr.render(world, gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 
         // Render our vision lines
         /*for (int i = 0; i < p1Array.size; i++) {
@@ -232,8 +235,8 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
 
         if (player.isDead()) {
-            game.setScreen(new GameOverScreen(game));
             dispose();
+            game.setScreen(new GameOverScreen(game));
         }
     }
 
@@ -266,6 +269,7 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        music.dispose();
     }
 
     public World getWorld() {

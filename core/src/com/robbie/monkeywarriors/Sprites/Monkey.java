@@ -32,6 +32,7 @@ public class Monkey extends Sprite {
     private float stateTimer;
     private final static float moveSpeed = 1.1f;
     private final static float jumpSpeed = 2.2f;
+    private final static float doubleJumpSpeed = 2.75f;
     private boolean runningRight;
     private boolean dead;
     public boolean canDoubleJump;
@@ -93,7 +94,7 @@ public class Monkey extends Sprite {
                 desiredVel += moveSpeed;
             }
             if (movement.get(i) == Movement.UP) {
-                jump(dt);
+                jump();
             }
         }
         float velChange = desiredVel - vel.x;
@@ -101,7 +102,7 @@ public class Monkey extends Sprite {
         b2body.applyForceToCenter(new Vector2(force, 0), true);
     }
 
-    public void jump(float dt) {
+    public void jump() {
         Vector2 vel = b2body.getLinearVelocity();
         float desiredVel = 0;
         // If he is jumping from on the ground
@@ -110,17 +111,17 @@ public class Monkey extends Sprite {
             previousState = currentState;
             currentState = State.JUMPING;
             float velChange = desiredVel - vel.y;
-            float force = b2body.getMass() * velChange / dt; // f = mv/t
+            float force = b2body.getMass() * velChange / (1/60f); // f = mv/t
             b2body.applyForceToCenter(new Vector2(0, force), true);
         }
         // If he is jumping from in the air
         else if (currentState == State.JUMPING || (currentState == State.FALLING && canDoubleJump)) {
             //b2body.applyForceToCenter(new Vector2(0, 3.5f), true);
-            desiredVel += 2.75;
+            desiredVel += doubleJumpSpeed;
             previousState = currentState;
             currentState = State.DOUBLE_JUMPING;
             float velChange = desiredVel - vel.y;
-            float force = b2body.getMass() * velChange / dt; // f = mv/t
+            float force = b2body.getMass() * velChange / (1/60f); // f = mv/t
             b2body.applyForceToCenter(new Vector2(0, force), true);
             canDoubleJump = false;
         }
