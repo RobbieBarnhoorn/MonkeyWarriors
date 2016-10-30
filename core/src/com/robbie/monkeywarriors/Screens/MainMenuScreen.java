@@ -23,6 +23,9 @@ public class MainMenuScreen implements Screen {
     private Viewport viewport;
 
     private TextureRegion background;
+    private Texture name;
+    private Texture buttons;
+    private Texture hoverButtons;
     private Button nameButton;
     private Button newButton;
     private Button resumeButton;
@@ -83,28 +86,28 @@ public class MainMenuScreen implements Screen {
     private void initButtons() {
         float width = viewport.getWorldWidth();
         float height = viewport.getWorldHeight();
-        Texture name = new Texture("menu/name.png");
-        Texture buttons = new Texture("menu/buttons.png");
-        Texture hover_buttons = new Texture("menu/hover_buttons.png");
+        name = new Texture("menu/name.png");
+        buttons = new Texture("menu/buttons.png");
+        hoverButtons = new Texture("menu/hover_buttons.png");
 
         nameButton = new Button(new TextureRegion(name, 0, 0, 140, 20),
                 new TextureRegion(name, 0, 0, 140, 20),
                 width - 0.25f * NAME_WIDTH, height + 2.6f * BUTTON_HEIGHT, NAME_WIDTH, NAME_HEIGHT);
 
         newButton = new Button(new TextureRegion(buttons, 0, 0, 80, 20),
-                new TextureRegion(hover_buttons, 0, 0, 80, 20),
+                new TextureRegion(hoverButtons, 0, 0, 80, 20),
                 width + 0.05f * BUTTON_WIDTH, height + 1.6f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         resumeButton = new Button(new TextureRegion(buttons, 80, 0, 80, 20),
-                new TextureRegion(hover_buttons, 80, 0, 80, 20),
+                new TextureRegion(hoverButtons, 80, 0, 80, 20),
                 width + 0.05f * BUTTON_WIDTH, height + 0.6f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         creditsButton = new Button(new TextureRegion(buttons, 160, 0, 80, 20),
-                new TextureRegion(hover_buttons, 160, 0, 80, 20),
+                new TextureRegion(hoverButtons, 160, 0, 80, 20),
                 width + 0.05f * BUTTON_WIDTH, height + -0.4f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         exitButton = new Button(new TextureRegion(buttons, 240, 0, 80, 20),
-                new TextureRegion(hover_buttons, 240, 0, 80, 20),
+                new TextureRegion(hoverButtons, 240, 0, 80, 20),
                 width + 0.05f * BUTTON_WIDTH, height - 1.4f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 
 
@@ -125,7 +128,7 @@ public class MainMenuScreen implements Screen {
                 public void handleClick() {
                     dispose();
                     game.music.dispose();
-                    game.setScreen(new PlayScreen(game, "level2"));
+                    game.setCurrentLevel(1);
                 }
             });
         }
@@ -135,7 +138,7 @@ public class MainMenuScreen implements Screen {
                 public void handleClick() {
                     dispose();
                     game.music.dispose();
-                    game.setScreen(new PlayScreen(game, "level2"));
+                    game.setCurrentLevel(game.getCurrentLevel());
                 }
             });
         }
@@ -143,8 +146,7 @@ public class MainMenuScreen implements Screen {
             b.setActionHandler(new ActionHandler() {
                 @Override
                 public void handleClick() {
-                    dispose();
-                    game.setScreen(new CreditsScreen(game));
+                    game.setScreen(new CreditsScreen(game, MainMenuScreen.this));
                 }
             });
         }
@@ -181,6 +183,9 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        name.dispose();
+        buttons.dispose();
+        hoverButtons.dispose();
         background.getTexture().dispose();
     }
 

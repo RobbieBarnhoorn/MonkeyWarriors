@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.robbie.monkeywarriors.MonkeyWarriors;
-import com.robbie.monkeywarriors.Scenes.Hud;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
 import com.robbie.monkeywarriors.Sprites.Monkey;
 import com.robbie.monkeywarriors.Tools.B2WorldCreator;
@@ -32,12 +31,12 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
  */
 public class PlayScreen implements Screen {
 
+    // Game properties
     private MonkeyWarriors game;
     private OrthographicCamera gamecam;
     private Viewport gameport;
-    private Hud hud;
 
-    //Tiled map variables
+    // Tiled map variables
     private TiledMap map;
     private MapProperties mapProperties;
     private int mapWidth;
@@ -60,12 +59,16 @@ public class PlayScreen implements Screen {
     private final static float cameraSpeed = 0.015f;
     private final static float ispeed = 1.0f - cameraSpeed;
 
+    // For printing vision lines to screen (debug)
     private static ShapeRenderer debugRenderer = new ShapeRenderer();
     public Array<Vector2> p1Array;
     public Array<Vector2> p2Array;
 
+    // For knowing if we have finished the level
+    private boolean setToDestroy;
 
-    public PlayScreen(MonkeyWarriors game, String level) {
+
+    public PlayScreen(MonkeyWarriors game, int level) {
         this.game = game;
 
         // Camera that follows player throughout world
@@ -75,12 +78,9 @@ public class PlayScreen implements Screen {
         gameport = new FitViewport(MonkeyWarriors.V_WIDTH/MonkeyWarriors.PPM,
                 MonkeyWarriors.V_HEIGHT/MonkeyWarriors.PPM, gamecam);
 
-        // Create the Heads Up Display for score/level timer/info
-        hud = new Hud(game.batch);
-
         // Load our map and setup our map renderer
         TmxMapLoader maploader = new TmxMapLoader();
-        map = maploader.load("levels/" + level + ".tmx");
+        map = maploader.load("levels/level" + level + ".tmx");
         mapProperties = map.getProperties();
         mapWidth = mapProperties.get("width", Integer.class);
         mapHeight = mapProperties.get("height", Integer.class);
@@ -104,12 +104,14 @@ public class PlayScreen implements Screen {
 
         player = creator.getPlayer();
 
-        world.setContactListener(new WorldContactListener());
+        world.setContactListener(new WorldContactListener(game));
 
         p1Array = new Array<Vector2>();
         p2Array = new Array<Vector2>();
 
-        game.music = Gdx.audio.newMusic(Gdx.files.internal("music/cave_3.mp3"));
+        setToDestroy = false;
+
+        game.music = Gdx.audio.newMusic(Gdx.files.internal("music/level" + level + ".mp3"));
         game.music.setLooping(true);
         game.music.setVolume(0.3f);
         game.music.play();
@@ -161,8 +163,6 @@ public class PlayScreen implements Screen {
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
         }
-
-        hud.update(dt);
 
         // Make our camera track our players position smoothly
         Vector3 cameraPosition = new Vector3(gamecam.position);
@@ -227,14 +227,15 @@ public class PlayScreen implements Screen {
             drawDebugLine(p1Array.get(i), p2Array.get(i), gamecam.combined);
         }*/
 
-        // Set our batch to now draw what the Hud camera sees
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        //hud.stage.draw();
-
         if (player.isDead()) {
             dispose();
             game.setScreen(new GameOverScreen(game));
         }
+        else if (setToDestroy) {
+            game.currentScreen.dispose();
+            game.setCurrentLevel(game.getCurrentLevel() + 1);
+        }
+
     }
 
     @Override
@@ -265,7 +266,6 @@ public class PlayScreen implements Screen {
         renderer.dispose();
         world.dispose();
         b2dr.dispose();
-        hud.dispose();
         game.music.dispose();
     }
 
@@ -284,6 +284,10 @@ public class PlayScreen implements Screen {
     public void addRay(Vector2 start, Vector2 end) {
         p1Array.add(start);
         p2Array.add(end);
+    }
+
+    public void setToDestroy() {
+        setToDestroy = true;
     }
 
     public static void drawDebugLine(Vector2 start, Vector2 end, Matrix4 projectionMatrix)

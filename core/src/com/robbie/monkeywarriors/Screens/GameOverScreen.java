@@ -64,11 +64,11 @@ public class GameOverScreen implements Screen {
 
     public void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-            game.setScreen(new PlayScreen(game, "level2"));
+            game.setCurrentLevel(game.getCurrentLevel());
             dispose();
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            System.exit(0);
+            Gdx.app.exit();
         }
     }
 

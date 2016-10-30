@@ -24,6 +24,8 @@ public class CreditsScreen implements Screen {
     private final float BUTTON_WIDTH = 80*10;
     private final float BUTTON_HEIGHT = 20*10;
 
+    private Screen mainMenuScreen;
+
     private MonkeyWarriors game;
     private OrthographicCamera cam;
     private Viewport viewport;
@@ -31,21 +33,23 @@ public class CreditsScreen implements Screen {
     private TextureRegion background;
     private Array<String> credits;
     private BitmapFont font;
+    private Texture backButtonTex = new Texture("menu/back.png");
 
     private float time;
 
-    public CreditsScreen(MonkeyWarriors game) {
+
+    public CreditsScreen(MonkeyWarriors game, MainMenuScreen mainMenuScreen) {
         this.game = game;
+        this.mainMenuScreen = mainMenuScreen;
         cam = new OrthographicCamera();
         cam.setToOrtho(false);
         viewport = new FitViewport(MonkeyWarriors.V_WIDTH, MonkeyWarriors.V_HEIGHT, cam);
         //initially set our gamcam to be centered correctly at the start of of map
         cam.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
-
         float width = viewport.getWorldWidth();
         float height = viewport.getWorldHeight();
         background = new TextureRegion(new Texture("menu/background1.png"));
-        backButton = new Button(new TextureRegion(new Texture("menu/back.png"), 0, 0, 80, 20),
+        backButton = new Button(new TextureRegion(backButtonTex, 0, 0, 80, 20),
                 new TextureRegion(new Texture("menu/back_hover.png"), 0, 0, 80, 20),
                 width + 1f * BUTTON_WIDTH, height - 1.4f * BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
         addActionHandler(backButton);
@@ -54,7 +58,7 @@ public class CreditsScreen implements Screen {
         credits.add("Programming\n.............................\nRobbie Barnhoorn");
         credits.add("Original Music\n.............................\nMitchell Cuthbertson");
         credits.add("Original Artwork\n.............................\nRobbie Barnhoorn\nLisa Titley\nMichael Carter\nMitchell Cuthbertson");
-        credits.add("Level Design\n.............................\nRobbie Barnhoorn\nLisa Titley");
+        credits.add("Level Design\n.............................\nRobbie Barnhoorn");
         credits.add("Borrowed Artwork\n.............................\nSNK/Playmore");
 
         font = new BitmapFont();
@@ -78,7 +82,6 @@ public class CreditsScreen implements Screen {
     public void render(float delta) {
         time += delta;
         handleInput();
-
         float mouseX = Gdx.input.getX();
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         boolean clicked = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
@@ -90,7 +93,7 @@ public class CreditsScreen implements Screen {
         font.draw(game.batch, credits.get(1), 1.7f*viewport.getWorldWidth(), time*50 - 220);
         font.draw(game.batch, credits.get(2), 1.7f*viewport.getWorldWidth(), time*50 - 440);
         font.draw(game.batch, credits.get(3), 1.7f*viewport.getWorldWidth(), time*50 - 750);
-        font.draw(game.batch, credits.get(4), 1.7f*viewport.getWorldWidth(), time*50 - 1000);
+        font.draw(game.batch, credits.get(4), 1.7f*viewport.getWorldWidth(), time*50 - 980);
         game.batch.end();
     }
 
@@ -99,7 +102,7 @@ public class CreditsScreen implements Screen {
             @Override
             public void handleClick() {
                 dispose();
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(mainMenuScreen);
             }
         });
     }
@@ -126,6 +129,8 @@ public class CreditsScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        background.getTexture().dispose();
+        font.dispose();
+        backButtonTex.dispose();
     }
 }

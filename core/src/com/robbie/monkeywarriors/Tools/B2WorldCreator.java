@@ -50,6 +50,7 @@ public class B2WorldCreator {
         createMarkers();
         createMonkey();
         createBats();
+        createFinish();
     }
 
     private void createGround() {
@@ -116,6 +117,23 @@ public class B2WorldCreator {
         }
     }
 
+    private void createFinish() {
+        for (MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject)object).getRectangle();
+
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2)/PPM, (rect.getY() + rect.getHeight()/2)/PPM);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox(rect.getWidth()/2/PPM, rect.getHeight()/2/PPM);
+            fdef.shape = shape;
+            fdef.filter.categoryBits = FINISH_BIT;
+            fdef.filter.maskBits = MONKEY_BIT;
+            fdef.isSensor = true;
+            body.createFixture(fdef);
+        }
+    }
     private void createMonkey() {
         MapObject object = map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject)object).getRectangle();

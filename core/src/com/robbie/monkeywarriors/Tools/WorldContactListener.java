@@ -1,10 +1,14 @@
 package com.robbie.monkeywarriors.Tools;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.robbie.monkeywarriors.MonkeyWarriors;
+import com.robbie.monkeywarriors.Screens.PlayScreen;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bandit;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bullet;
 import com.robbie.monkeywarriors.Sprites.Monkey;
+
+import java.io.IOException;
 
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 
@@ -13,6 +17,11 @@ import static com.robbie.monkeywarriors.MonkeyWarriors.*;
  */
 public class WorldContactListener implements ContactListener {
 
+    private MonkeyWarriors game;
+
+    public WorldContactListener(MonkeyWarriors game) {
+        this.game = game;
+    }
 
     @Override
     public void beginContact(Contact contact) {
@@ -149,6 +158,9 @@ public class WorldContactListener implements ContactListener {
                     Bandit bandit = (Bandit)fixA.getUserData();
                     bandit.setToDestroy();
                 }
+                break;
+            case MONKEY_BIT | FINISH_BIT:
+                ((PlayScreen)(game.currentScreen)).setToDestroy();
                 break;
         }
     }

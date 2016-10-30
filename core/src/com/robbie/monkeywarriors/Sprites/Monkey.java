@@ -201,7 +201,7 @@ public class Monkey extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / PPM);
         fdef.filter.categoryBits = MONKEY_BIT;
-        fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | SOLDIER_BIT | BAT_BIT | BULLET_BIT;
+        fdef.filter.maskBits = GROUND_BIT | LAVA_BIT | SOLDIER_BIT | BAT_BIT | BULLET_BIT | FINISH_BIT;
         fdef.shape = shape;
         fdef.density = 1f;
         fdef.friction = 1f;
