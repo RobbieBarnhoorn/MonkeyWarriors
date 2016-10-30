@@ -52,10 +52,10 @@ public class CreditsScreen implements Screen {
 
         credits = new Array<String>();
         credits.add("Programming\n.............................\nRobbie Barnhoorn");
-        credits.add("Original Artwork\n.............................\nRobbie Barnhoorn\nLisa Titley\nMichael Carter\nMitchell Cuthbertson");
-        credits.add("Borrowed Artwork\n.............................\nSNK/Playmore");
-        credits.add("Level Design\n.............................\nRobbie Barnhoorn\nLisa Titley");
         credits.add("Original Music\n.............................\nMitchell Cuthbertson");
+        credits.add("Original Artwork\n.............................\nRobbie Barnhoorn\nLisa Titley\nMichael Carter\nMitchell Cuthbertson");
+        credits.add("Level Design\n.............................\nRobbie Barnhoorn\nLisa Titley");
+        credits.add("Borrowed Artwork\n.............................\nSNK/Playmore");
 
         font = new BitmapFont();
         font.getData().setScale(1.5f, 1.5f);
@@ -87,10 +87,10 @@ public class CreditsScreen implements Screen {
         game.batch.draw(background, 0, 0);
         backButton.update(game.batch, mouseX, mouseY, clicked);
         font.draw(game.batch, credits.get(0), 1.7f*viewport.getWorldWidth(), time*50);
-        font.draw(game.batch, credits.get(1), 1.7f*viewport.getWorldWidth(), time*50 - 175);
+        font.draw(game.batch, credits.get(1), 1.7f*viewport.getWorldWidth(), time*50 - 220);
         font.draw(game.batch, credits.get(2), 1.7f*viewport.getWorldWidth(), time*50 - 440);
-        font.draw(game.batch, credits.get(3), 1.7f*viewport.getWorldWidth(), time*50 - 640);
-        font.draw(game.batch, credits.get(4), 1.7f*viewport.getWorldWidth(), time*50 - 840);
+        font.draw(game.batch, credits.get(3), 1.7f*viewport.getWorldWidth(), time*50 - 750);
+        font.draw(game.batch, credits.get(4), 1.7f*viewport.getWorldWidth(), time*50 - 1000);
         game.batch.end();
     }
 

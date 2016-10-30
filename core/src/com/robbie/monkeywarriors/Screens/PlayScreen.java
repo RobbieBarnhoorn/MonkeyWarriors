@@ -165,10 +165,9 @@ public class PlayScreen implements Screen {
         hud.update(dt);
 
         // Make our camera track our players position smoothly
-
         Vector3 cameraPosition = new Vector3(gamecam.position);
         cameraPosition.scl(ispeed);
-        Vector3 target = new Vector3(player.b2body.getPosition().x, player.b2body.getPosition().y - 30/PPM, 0);
+        Vector3 target = new Vector3(player.b2body.getPosition().x, player.b2body.getPosition().y, 0);
         target.scl(cameraSpeed);
         cameraPosition.add(target);
 
@@ -230,7 +229,7 @@ public class PlayScreen implements Screen {
 
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
+        //hud.stage.draw();
 
         if (player.isDead()) {
             dispose();
