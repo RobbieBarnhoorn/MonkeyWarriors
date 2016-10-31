@@ -12,19 +12,13 @@ Running
 
 Hello. I hope you enjoy my game.
 
-To run it:
+Gradle will run it for you. The gradlew shell script will run the game when
+supplied with parameters as follows:
+
 ./gradlew desktop:run
 
-To create a jar file:
-./gradlew desktop:dist
-
-To run the jar file:
-java -jar desktop/build/libs/desktop-1.0.jar
-
-Additionally, I will attach a "standalone" jar file 
-in case anyone has trouble with gradle. To run it:
-
-java -jar desktop-1.0.jar
+Alternately, I used IntelliJ for much of my development, and it always ran
+fine there.
 
 ---------------------
 Controls
