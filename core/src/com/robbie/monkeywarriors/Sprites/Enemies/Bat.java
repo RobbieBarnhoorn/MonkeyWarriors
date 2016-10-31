@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.robbie.monkeywarriors.Screens.PlayScreen;
 import com.robbie.monkeywarriors.Sprites.Monkey;
-import com.robbie.monkeywarriors.Tools.B2WorldCreator;
 
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 

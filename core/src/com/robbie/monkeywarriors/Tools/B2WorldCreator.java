@@ -11,7 +11,6 @@ import com.robbie.monkeywarriors.Sprites.Enemies.Bandit;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Enemy;
 import com.robbie.monkeywarriors.Sprites.Monkey;
-
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 
 /**

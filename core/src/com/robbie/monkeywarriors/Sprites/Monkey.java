@@ -158,6 +158,11 @@ public class Monkey extends Sprite {
             runningRight = true;
         }
 
+        if ((currentState == State.JUMPING || currentState == State.DOUBLE_JUMPING)
+                && Math.abs(b2body.getLinearVelocity().x) < 0.005) {
+            region = idleFrame;
+        }
+
         //if the current state is the same as the previous state increase the state timer.
         //otherwise the state has changed and we need to reset timer.
         stateTimer = currentState == previousState ? stateTimer + dt : 0;

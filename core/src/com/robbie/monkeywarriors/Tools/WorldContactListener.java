@@ -7,9 +7,6 @@ import com.robbie.monkeywarriors.Sprites.Enemies.Bandit;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bat;
 import com.robbie.monkeywarriors.Sprites.Enemies.Bullet;
 import com.robbie.monkeywarriors.Sprites.Monkey;
-
-import java.io.IOException;
-
 import static com.robbie.monkeywarriors.MonkeyWarriors.*;
 
 /**

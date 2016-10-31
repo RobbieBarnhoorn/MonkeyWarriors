@@ -3,15 +3,10 @@ package com.robbie.monkeywarriors;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.robbie.monkeywarriors.Screens.CreditsScreen;
 import com.robbie.monkeywarriors.Screens.MainMenuScreen;
 import com.robbie.monkeywarriors.Screens.PlayScreen;
-
 import java.io.*;
 
 public class MonkeyWarriors extends Game {
