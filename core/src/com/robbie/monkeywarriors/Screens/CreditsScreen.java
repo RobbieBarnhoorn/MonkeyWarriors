@@ -56,7 +56,7 @@ public class CreditsScreen implements Screen {
         credits.add("Programming\n.............................\nRobbie Barnhoorn");
         credits.add("Original Music\n.............................\nMitchell Cuthbertson");
         credits.add("Original Artwork\n.............................\nRobbie Barnhoorn\nLisa Titley\nMichael Carter\nMitchell Cuthbertson");
-        credits.add("Level Design\n.............................\nRobbie Barnhoorn");
+        credits.add("Level Design\n.............................\nRobbie Barnhoorn\nLisa Titley");
         credits.add("Borrowed Artwork\n.............................\nSNK/Playmore");
 
         font = new BitmapFont();
